@@ -9,16 +9,8 @@
         width: 90%;
     }
 
-    tr:nth-child(even) {
-        background-color: #ddd;
-    }
-
-    tr:nth-child(odd) {
-        background-color: #bbb;
-    }
-
     th, td {
-        padding: 4px;
+        padding: 8px;
     }
 
     .centered {

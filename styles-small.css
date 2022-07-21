@@ -1,2 +1,10 @@
 @media (max-width: 480px) {
+
+    body {
+        margin: 15px;
+    }
+
+    th, td {
+        padding: 2px;
+    }
 }
