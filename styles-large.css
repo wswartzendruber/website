@@ -1,2 +1,28 @@
 @media (min-width: 1281px) {
+
+    body {
+        margin: 25px auto;
+        max-width: 1280px;
+    }
+
+    table {
+        width: 90%;
+    }
+
+    tr:nth-child(even) {
+        background-color: #ddd;
+    }
+
+    tr:nth-child(odd) {
+        background-color: #bbb;
+    }
+
+    th, td {
+        padding: 4px;
+    }
+
+    .centered {
+        margin-left: auto;
+        margin-right: auto;
+    }
 }
