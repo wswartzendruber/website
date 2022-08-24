@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en-US">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <title>STF-7: The Silly 7-bit Transformation Format</title>
+        <link rel="stylesheet" href="../../styles-common.css">
+        <link rel="stylesheet" href="../../styles-small.css">
+        <link rel="stylesheet" href="../../styles-medium.css">
+        <link rel="stylesheet" href="../../styles-large.css">
+    </head>
+    <body>
+        <h1>STF-7: The Silly 7-bit Transformation Format</h1>
+        <p>What follows is a definition for the STF-7 encoding scheme I have just created.</p>
+        <h2>Features</h2>
+        <p>This encoding has a number of advantages over UTF-7:
+        <ul>
+            <li>Self-synchronization.</li>
+            <li>Native encoding of supplementary characters (without surrogates).</li>
+            <li>Direct and indirect characters occupy different ASCII ranges.</li>
+            <li><code>U+10FFFF</code> encodes in six ASCII values.</li>
+        </ul>
+        <h2>Encoding Steps</h2>
+        <p>Some Unicode characters are encoded directly as single ASCII values. Others are encoded indirectly as multiple values, up to and including six.</p>
+        <h3>Direct Encoding</h3>
+        <p>The following character ranges are encoded directly by making the encoded ASCII value the same as the Unicode scalar value.</p>
+        <table class="narrow">
+            <tr>
+                <th>Low</th>
+                <th>High</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td>U+00</td>
+                <td>U+20</td>
+                <td>Control codes and space</td>
+            </tr>
+            <tr>
+                <td>U+30</td>
+                <td>U+39</td>
+                <td>Numbers</td>
+            </tr>
+            <tr>
+                <td>U+41</td>
+                <td>U+5A</td>
+                <td>Latin uppercase</td>
+            </tr>
+            <tr>
+                <td>U+61</td>
+                <td>U+7A</td>
+                <td>Latin lowercase</td>
+            </tr>
+        </table>
+        <p>Directly encoded characters can be interpreted as-is by an ASCII system without STF-7 support.</p>
+        <h3>Indirect Encoding</h3>
+        <p>Any Unicode character not directly encoded is indirectly encoded. In this case, the scalar value is split into chunks of four bits.</p>
+        <table class="narrow">
+            <tr>
+                <th>Low</th>
+                <th>High</th>
+                <th>ASCII Values</th>
+            </tr>
+            <tr>
+                <td>U+21</td>
+                <td>U+2F</td>
+                <td>2</td>
+            </tr>
+            <tr>
+                <td>U+3A</td>
+                <td>U+40</td>
+                <td>2</td>
+            </tr>
+            <tr>
+                <td>U+5B</td>
+                <td>U+60</td>
+                <td>2</td>
+            </tr>
+            <tr>
+                <td>U+7B</td>
+                <td>U+FF</td>
+                <td>2</td>
+            </tr>
+            <tr>
+                <td>U+100</td>
+                <td>U+FFF</td>
+                <td>3</td>
+            </tr>
+            <tr>
+                <td>U+1000</td>
+                <td>U+FFFF</td>
+                <td>4</td>
+            </tr>
+            <tr>
+                <td>U+10000</td>
+                <td>U+FFFFF</td>
+                <td>5</td>
+            </tr>
+            <tr>
+                <td>U+100000</td>
+                <td>U+10FFFF</td>
+                <td>6</td>
+            </tr>
+        </table>
+        <p>The number of ASCII values needed will reflect the number of four bit chunks the scalar value will be divided into. Padding in the most significant chunk is done by prepending the bits there with zeros.</p>
+        <h4>Initial Chunk</h4>
+        <p>Start with the most significant chunk. Its value will inherently be between <code>0x0</code> and <code>0xF</code>. Output a single ASCII value in place of it as specified below:</p>
+        <table class="narrow">
+            <tr>
+                <th>Chunk Value</th>
+                <th>ASCII Value</th>
+            </tr>
+            <tr>
+                <td>0x0</td>
+                <td>0x21</td>
+            </tr>
+            <tr>
+                <td>0x1</td>
+                <td>0x22</td>
+            </tr>
+            <tr>
+                <td>0x2</td>
+                <td>0x23</td>
+            </tr>
+            <tr>
+                <td>0x3</td>
+                <td>0x24</td>
+            </tr>
+            <tr>
+                <td>0x4</td>
+                <td>0x25</td>
+            </tr>
+            <tr>
+                <td>0x5</td>
+                <td>0x26</td>
+            </tr>
+            <tr>
+                <td>0x6</td>
+                <td>0x27</td>
+            </tr>
+            <tr>
+                <td>0x7</td>
+                <td>0x28</td>
+            </tr>
+            <tr>
+                <td>0x8</td>
+                <td>0x29</td>
+            </tr>
+            <tr>
+                <td>0x9</td>
+                <td>0x2A</td>
+            </tr>
+            <tr>
+                <td>0xA</td>
+                <td>0x2B</td>
+            </tr>
+            <tr>
+                <td>0xB</td>
+                <td>0x2C</td>
+            </tr>
+            <tr>
+                <td>0xC</td>
+                <td>0x2D</td>
+            </tr>
+            <tr>
+                <td>0xD</td>
+                <td>0x2E</td>
+            </tr>
+            <tr>
+                <td>0xE</td>
+                <td>0x2F</td>
+            </tr>
+            <tr>
+                <td>0xF</td>
+                <td>0x3A</td>
+            </tr>
+        </table>
+        <h4>Remaining Chunks</h4>
+        <p>Proceed through the remaining chunks peforming the same operation as above, except according to the following table instead:</p>
+        <table class="narrow">
+            <tr>
+                <th>Chunk Value</th>
+                <th>ASCII Value</th>
+            </tr>
+            <tr>
+                <td>0x0</td>
+                <td>0x3B</td>
+            </tr>
+            <tr>
+                <td>0x1</td>
+                <td>0x3C</td>
+            </tr>
+            <tr>
+                <td>0x2</td>
+                <td>0x3D</td>
+            </tr>
+            <tr>
+                <td>0x3</td>
+                <td>0x3E</td>
+            </tr>
+            <tr>
+                <td>0x4</td>
+                <td>0x3F</td>
+            </tr>
+            <tr>
+                <td>0x5</td>
+                <td>0x40</td>
+            </tr>
+            <tr>
+                <td>0x6</td>
+                <td>0x5B</td>
+            </tr>
+            <tr>
+                <td>0x7</td>
+                <td>0x5C</td>
+            </tr>
+            <tr>
+                <td>0x8</td>
+                <td>0x5D</td>
+            </tr>
+            <tr>
+                <td>0x9</td>
+                <td>0x5E</td>
+            </tr>
+            <tr>
+                <td>0xA</td>
+                <td>0x5F</td>
+            </tr>
+            <tr>
+                <td>0xB</td>
+                <td>0x60</td>
+            </tr>
+            <tr>
+                <td>0xC</td>
+                <td>0x7B</td>
+            </tr>
+            <tr>
+                <td>0xD</td>
+                <td>0x7C</td>
+            </tr>
+            <tr>
+                <td>0xE</td>
+                <td>0x7D</td>
+            </tr>
+            <tr>
+                <td>0xF</td>
+                <td>0x7E</td>
+            </tr>
+        </table>
+        <p>After this, the next Unicode value can be encoded.</p>
+        <h2>Decoding Considerations</h2>
+        <p>The decoding steps are performed in reverse. A main consideration to keep in mind is that Unicode values that can be directly encoded should not be decoded indirectly. In other words, anything that can be directly encoded that isn't directly encoded should be considered an encoding error and rejected.</p>
+    </body>
+</html>

@@ -9,6 +9,10 @@
         width: 90%;
     }
 
+    table.narrow {
+        width: 50%;
+    }
+
     th, td {
         padding: 8px;
     }
