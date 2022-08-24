@@ -4,6 +4,14 @@
         margin: 15px;
     }
 
+    table {
+        width: 100%;
+    }
+
+    table.narrow {
+        width: 75%;
+    }
+
     th, td {
         padding: 2px;
     }
