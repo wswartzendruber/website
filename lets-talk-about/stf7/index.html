@@ -11,14 +11,7 @@
     </head>
     <body>
         <h1>STF-7: The Silly 7-bit Transformation Format</h1>
-        <h2>Premise</h2>
-        <p>Knowing that:</p>
-        <ol>
-            <li>The zombie apocalypse could come upon us at any moment,</li>
-            <li>This will leave us with nothing except 7-bit teletype machines for communication,</li>
-            <li>We will still need to send emojis to each other,</li>
-        </ol>
-        <p>I have taken it upon myself to create a 7-bit encoding scheme for Unicode.
+        <p>What follows is a definition for the STF-7 encoding scheme I have just created.</p>
         <h2>Features</h2>
         <p>This encoding has a number of advantages over UTF-7:
         <ul>
@@ -117,9 +110,9 @@
                 <td>6</td>
             </tr>
         </table>
-        <p>The number of ASCII values needed will reflect the number of four bit chunks the scalar value will be divided into. Padding in the most significant chunk is done by prepending the bits there with zeros.</p>
-        <h4>Initial Chunk</h4>
-        <p>Start with the most significant chunk. Its value will inherently be between <code>0x0</code> and <code>0xF</code>. Output a single ASCII value in place of it as specified below:</p>
+        <p>The number of ASCII values needed will reflect the number of four bit chunks the scalar value will be divided into. Padding is done by prepending any necessary zeroes to the most significant chunk. Each chunk will inherently have a value between <code>0x0</code> and <code>0xF</code>.</p>
+        <h4>Initial Chunks</h4>
+        <p>Start with the most significant chunk and work your way through each one except for the last one. Output a single ASCII value for each one in place of its four bit value according to the table below:</p>
         <table class="narrow">
             <tr>
                 <th>Chunk Value</th>
@@ -190,8 +183,8 @@
                 <td>0x3A</td>
             </tr>
         </table>
-        <h4>Remaining Chunks</h4>
-        <p>Proceed through the remaining chunks peforming the same operation as above, except according to the following table instead:</p>
+        <h4>Closing Chunk</h4>
+        <p>For a Unicode value's final chunk, use the below table instead:</p>
         <table class="narrow">
             <tr>
                 <th>Chunk Value</th>
@@ -263,7 +256,14 @@
             </tr>
         </table>
         <p>After this, the next Unicode value can be encoded.</p>
-        <h2>Decoding Considerations</h2>
-        <p>The decoding steps are performed in reverse. A main consideration to keep in mind is that Unicode values that can be directly encoded should not be decoded indirectly. In other words, anything that can be directly encoded that isn't directly encoded should be considered an encoding error and rejected.</p>
+        <h2>Decoding</h2>
+        <p>The decoding steps are performed in reverse.</p>
+        <p>Decoders should enforce these two specific rules:</p>
+        <ol>
+            <li>Any character that can be directly encoded should be directly encoded.</li>
+            <li>Indirectly encoded characters should be encoded using as few bytes as possible.</li>
+        </ol>
+        <p>Any decoded Unicode value that doesn't follow these rules should be rejected.</p>
+        <p>When randomly seeking, do not immediately resume decoding unless a directly encoded value is detected. Seek immediately past the next closing chunk instead, and resume decoding there.</p>
     </body>
 </html>
