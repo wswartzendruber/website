@@ -272,5 +272,36 @@
         </ol>
         <p>Any decoded Unicode value that doesn't follow these rules should be rejected.</p>
         <p>When randomly seeking, do not immediately resume decoding unless a directly encoded value is detected. Seek immediately past the next closing chunk instead, and resume decoding there.</p>
+        <h2>Samples</h2>
+        <table>
+            <tr>
+                <th>Text</th>
+                <th>STF-7</th>
+            </tr>
+            <tr>
+                <td>the quick brown fox jumps over the lazy dogs</td>
+                <td>the quick brown fox jumps over the lazy dogs</td>
+            </tr>
+            <tr>
+                <td>Hello, world!</td>
+                <td>Hello#{ world#<</td>
+            </tr>
+            <tr>
+                <td>Emoji: 👦</td>
+                <td>Emoji$_ ":%'[</td>
+            </tr>
+            <tr>
+                <td>Ethnically-modified emoji: 👦🏿</td>
+                <td>Ethnically#|modified emoji$_ ":%'[":$:~</td>
+            </tr>
+            <tr>
+                <td>안녕하세요!</td>
+                <td>-&%],"&@.&&]-"$]-'*?#&gt;</td>
+            </tr>
+            <tr>
+                <td>제가 美國人입니다: 🇺🇸🧑</td>
+                <td>-)"{+-!; (:)}&(!`%/,_-()@,#-],#/?$_ ":":_":":]":*.&gt;</td>
+            </tr>
+        </table>
     </body>
 </html>
