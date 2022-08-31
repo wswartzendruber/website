@@ -26,11 +26,7 @@
         <p><img src="cp437.png" class="full-width" alt="CP437"></p>
         <p>And so Basic ASCII code point values range from 0-127 while Extended ASCII ranges from 128-255.</p>
         <h2>Different Languages: Code Page Confusion</h2>
-        <p>The United States may have adopted CP437 as its Extended ASCII code page, but other regions of the world had little use for it. What they did have use for, however, was repurposing the Extended ASCII range to contain their own localized linguistic symbols.</p>
-        <p>Here's how computers in Greece interpreted things:</p>
-        <!-- IMAGE -->
-        <p>You can see that Basic ASCII is left in-tact, but that Extended ASCII has been replaced with their own local variant.</p>
-        <p>Well, here's the problem. All files really contain is bytes of data, and computers only know to display that data according to the code page they're configured for. Computers back then didn't know or care about which code page a file was really encoded in, they would simply display it as they knew how. Imagine opening a Russian file on a machine configured for Israel's code page. You'll see Hebrew, but it will be absolute gibberish. And for that matter, if you find a text file, how do you even know what code page it's encoded with?</p>
+        <p>The United States may have adopted CP437 as its Extended ASCII code page, but other regions of the world had little use for it. What they did have use for, however, was repurposing the Extended ASCII range to contain their own localized linguistic symbols. Well, here's the problem. All files really contain is bytes of data, and computers only know to display that data according to the code page they're configured for. Computers back then didn't know or care about which code page a file was really encoded in, they would simply display it as they knew how. Imagine opening a Russian file on a machine configured for Israel's code page. You'll see Hebrew, but it will be absolute gibberish. And for that matter, if you find a text file, how do you even know what code page it's encoded with?</p>
         <h2>One Code Page to Rule Them All: Unicode</h2>
         <p>Well this system of different, incompatible code pages may have been fine for data staying within a region, but it made international document exchange extremely tedious. What the industry wanted was a single code page that contained any linguistic symbol anyone could possibly want to show.</p>
         <p>And so the industry created Unicode 1.0 and released it in October of 1991. Now pay attention to this next part because it's extremely important: The Unicode code page extended the original 7-bit ASCII code page. That means the code point values for English letters, numbers, and symbols all stayed the same between Basic ASCII and the new Unicode system. Therefore, any Unicode code points between 0 and 127 inherently refer to Basic ASCII characters. But that is where the similarities end.</p>
@@ -50,7 +46,7 @@
         <p>Two separate encodings were devised:</p>
         <h3>UTF-16</h3>
         <p>While simply tossing UCS-2 and redefining a more concise replacement would have been desired, it was ultimately infeasible. Microsoft had already begun moving internally to make all new versions of Windows based on NT. Meanwhile, Java and JavaScript had already begun to see an uptick in popularity. Unfortunately, UCS-2 was here to stay. But fortunately, there was an extension path forward.
-        <p>Unicode 1.0 didn't define all 65,536 possible code points. It left a large chunk of them undefined for future use. Part of this available segment was taken and split into two different ranges called surrogates. One subrange was the high surrogate and the other was the low surrogate. A high surrogate and a low surrogate could then be combined to address many more unique code points. This scheme was called UTF-16, and Windows NT, Mac OS, Java, and JavaScript were all updated to understand this surrogate concept.</p>
+        <p>Unicode 1.0 didn't define all 65,536 possible code points. It left a large chunk of them undefined for future use. Part of this available segment was taken and split into two different ranges called surrogates. One subrange was the high surrogates and the other was the low surrogates. A single high surrogate value and a single low surrogate value could then be combined to address an extended character. This scheme was called UTF-16, and Windows NT, Mac OS, Java, and JavaScript were all updated to understand this surrogate concept.</p>
         <p>All UCS-2 that is within the Unicode 1.0 code page is inherently valid UTF-16. And UTF-16 can be safely stored by legacy UCS-2 systems so long as those systems do not truncate or cut text. This is because UCS-2 is not surrogate-aware and will happily separate a compound pair.</p>
         <p>UTF-16 is the native encoding scheme for Unicode 2.0 and later, and Unicode's current limit of 1,112,064 unique code points stems from the number of unique values that UTF-16 can address with its basic (UCS-2) and surrogate pair systems combined.</p>
         <p>And so getting the UCS-2 operating systems and runtimes extended to handle the larger Unicode 2.0+ code page was taken care of, but what about systems that couldn't handle null bytes?</p>
@@ -65,6 +61,7 @@
             <li><code>11110XXX 10XXXXXX 10XXXXXX 10XXXXXX</code></li>
         </ul>
         <p>The <code>X</code> placeholders are where arbitrary bits for the code point value are stored. Any UTF-8 sequence whose byte starts with a zero bit is therefore Basic ASCII and is encoded as such. Code points outside of this range don't cause problems for legacy systems either, they are just interpreted as some Extended ASCII character from some arbitrary code page, which is fine.</p>
+        <p>Note that the four byte sequences are used for encoding extended characters directly as opposed to the surrogate mechanism used by UTF-16. It is against specification to encode a surrogate itself with UTF-8.</p>
         <p>Another useful aspect of UTF-8 is its self-synchronization feature. This makes it possible to skip to the middle of a UTF-8 byte stream and determine what role in a character the current byte plays.</p>
         <p>For example:</p>
         <ul>
@@ -81,56 +78,61 @@
         <h2>Other Encodings</h2>
         <p>Since the release of the Unicode 2.0 specification, other encodings have emerged to permit Unicode text to be used in certain niche scenarios. Of these, only UTF-32 is officially a part of the Unicode specification.</p>
         <ul>
-            <li><strong>UTF-32</strong>: Stores all values directly as four-byte integers.</li>
             <li><strong>UTF-7</strong>: Allows Unicode to pass through 7-bit systems, such as legacy teletype described above.</li>
-            <li><strong>UTF-EBDIC</strong>: Allows Unicode to pass through legacy EBDIC mainframes.</li>
-            <li><strong>GB 18030</strong>: China's internal encoding which extends their GB 2312 encoding 1980 that also supports every possible Unicode character.</li>
+            <li><strong>UTF-32</strong>: Stores all values directly as four-byte integers.</li>
+            <li><strong>UTF-EBCDIC</strong>: Allows Unicode to pass through legacy EBCDIC mainframes.</li>
+            <li><strong>GB 18030</strong>: China's internal encoding which extends their GB 2312-1980 system, but in a way that also supports every possible Unicode character.</li>
+            <li><strong>CESU-8</strong>: Like UTF-8, except extended sequences are encoded using surrogate pairs instead of directly; therefore, four-byte sequences are not used.</li>
+            <li><strong>WTF-8</strong>: Effectively combines UTF-8 and CESU-8, permitting extended characters to be encoded either directly or as surrogate pairs.</li>
         </ul>
         <h2>Comparison of Encodings</h2>
         <p>The different encodings are compared below. The column labeled "Extended" refers to how the scheme encodes characters outside of the original UCS-2 range.</p>
         <p>
-            <table>
+            <table class="narrow">
                 <tr>
                     <th>Name</th>
                     <th>Bytes</th>
-                    <th>Extended</th>
-                    <th>Common Uses</th>
+                    <th>Extended Characters</th>
                 </tr>
                 <tr>
                     <td>UTF-7</td>
-                    <td>1-7</td>
-                    <td>Surrogate</td>
-                    <td>Legacy email</td>
+                    <td>1-8</td>
+                    <td>Surrogate Encoding</td>
                 </tr>
                 <tr>
                     <td>UTF-8</td>
                     <td>1-4</td>
-                    <td>Direct</td>
-                    <td>File exchange, network exchange, Linux file names</td>
+                    <td>Direct Encoding</td>
                 </tr>
                 <tr>
                     <td>UTF-16</td>
                     <td>2, 4</td>
-                    <td>Surrogate</td>
-                    <td>APIs: Win32, macOS, iOS, Qt</td>
+                    <td>Surrogate Encoding</td>
                 </tr>
                 <tr>
                     <td>UTF-32</td>
                     <td>4</td>
-                    <td>Direct</td>
-                    <td>?</td>
+                    <td>Direct Encoding</td>
                 </tr>
                 <tr>
-                    <td>UTF-EBDIC</td>
-                    <td>?</td>
-                    <td>?</td>
-                    <td>EBDIC mainframes</td>
+                    <td>UTF-EBCDIC</td>
+                    <td>1-5</td>
+                    <td>Direct Encoding</td>
                 </tr>
                 <tr>
                     <td>GB 18030</td>
                     <td>1, 2, 4</td>
-                    <td>Direct</td>
-                    <td>Chinese government</td>
+                    <td>Direct Encoding</td>
+                </tr>
+                <tr>
+                    <td>CESU-8</td>
+                    <td>1-3</td>
+                    <td>Surrogate Encoding</td>
+                </tr>
+                <tr>
+                    <td>WTF-8</td>
+                    <td>1-4</td>
+                    <td>Both</td>
                 </tr>
             </table>
         </p>
