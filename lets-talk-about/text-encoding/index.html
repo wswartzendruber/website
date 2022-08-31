@@ -31,7 +31,7 @@
         <p>Well this system of different, incompatible code pages may have been fine for data staying within a region, but it made international document exchange extremely tedious. What the industry wanted was a single code page that contained any linguistic symbol anyone could possibly want to show.</p>
         <p>And so the industry created Unicode 1.0 and released it in October of 1991. Now pay attention to this next part because it's extremely important: The Unicode code page extended the original 7-bit ASCII code page. That means the code point values for English letters, numbers, and symbols all stayed the same between Basic ASCII and the new Unicode system. Therefore, any Unicode code points between 0 and 127 inherently refer to Basic ASCII characters. But that is where the similarities end.</p>
         <p>Unicode 1.0 didn't address 256 unique values like the existing Extended ASCII schemes, it addressed 65,536 unique values. This was accomplished by using two bytes to encode each code point instead of one. And when it came to Basic ASCII (which only needed one byte), each one was preceded by a null byte. So while a single byte of <code>0x20</code> represents a space in Basic ASCII, two bytes of <code>0x00</code> and <code>0x20</code> are used to do so here. This encoding scheme was called UCS-2.</p>
-        <p>Now pay attention again, because this next part is also critically important: USC-2 could not safely pass through most text buffers at the time. Remember that UCS-2 encodes Basic ASCII values by prepending a null byte. Well, most text buffers assume a null byte to mark the end of the text sequence. ASCII sequences would have them deliberately inserted for this purpose only, but UCS-2 did it for every character in the English language. In other words, your English text would terminate before it even began.</p>
+        <p>Now pay attention again, because this next part is also critically important: UCS-2 could not safely pass through most text buffers at the time. Remember that UCS-2 encodes Basic ASCII values by prepending a null byte. Well, most text buffers assume a null byte to mark the end of the text sequence. ASCII sequences would have them deliberately inserted for this purpose only, but UCS-2 did it for every character in the English language. In other words, your English text would terminate before it even began.</p>
         <p>Despite this glaring shortcoming, Windows NT, Mac OS, Java, and JavaScript all jumped on the UCS-2 bandwagon. Their text handling runtimes were renovated to internally use it. And this was fine for them because their buffers didn't terminate due to the presence of a single null byte (anymore).</p>
         <p>But there was a problem: Almost nobody used Windows NT, Mac OS, Java, or JavaScript; so almost nobody could handle UCS-2. And given that MS-DOS, Windows 3.x, and Windows 9x couldn't even transport it because of the null byte issue, there was really no integration path forward for handling Unicode on these predominant systems.</p>
         <p>And to top things off, people were realizing that a code page of 65,535 characters simply wasn't enough.</p>
@@ -136,5 +136,23 @@
                 </tr>
             </table>
         </p>
+        <h3>UTF-7</h3>
+        <p>Currently defined by RFC 2152, this encoding is not really used anymore. It originally found its place in allowing Unicode to pass through 7-bit MIME email. In recent years, mail systems have come to support the 8BITMIME extension, allowing UTF-8 to effortlessly pass through instead.</p>
+        <p>In recent versions of .NET, The <code>System.Text.Encoding.UTF7Encoding</code> class, while present, results in an exception being thrown. This is due to security issues with the format itself. Browsers that are compliant with HTML5 are required to reject UTF-7 as an encoding.</p>
+        <h3>UTF-8</h3>
+        <p>In spirit, UTF-8 exists to allow Unicode to pass through any system that is ASCII-centric. This includes things like HTML and XML, which support declaring their encodings using only non-null Basic ASCII bytes (which is something UTF-16 cannot do).</p>
+        <p><strong>In reality, UTF-8 has completely taken over as the defacto standard encoding for all new scenarios.</strong> It's most prominent rise has been with the World Wide Web, where virtually all sites in existence use it as their encoding regardless of their language. ASCII-centric operating systems and utilities also rely on it to enable full Unicode support without incuring any breaking changes.</p>
+        <p>If the question of which encoding to use ever arises, the answer is most likely UTF-8.</p>
+        <p>With all this said, <strong>UTF-8 decoder implementations must take care to exercise proper security practices as defined by the Unicode specification</strong>.</p>
+        <h3>UTF-16</h3>
+        <p>Despite being the native encoding for Unicode 2.0 and later, UTF-16 is not commonly used anymore in new systems. An argument could be made that UTF-16 bitstreams are cleaner when it comes to processing and validating them. Specifically, UTF-16's design makes only two types of encoding errors possible.</p>
+        <p>If the need to interoperate with UCS-2 ever presents itself, then UTF-16 becomes the only sensible option for doing so. In other cases, it may be desireable to use it internally for enclosed systems, as its representation is arguably cleaner.</p>
+        <h3>UTF-32</h3>
+        <p>This encoding is almost never encountered in the wild. Some language runtimes use it internally for string representation.</p>
+        <p>It should be noted that the most significant byte is always going to be null, as Unicode itself only requires 21 bits of precision to adequately address all possible characters.</p>
+        <h3>UTF-EBCDIC</h3>
+        <p>No meaningful commentary is currently offered here.</p>
+        <h3>GB 18030</h3>
+        <p>Check back here for later updates!</p>
     </body>
 </html>
