@@ -75,17 +75,8 @@
             <li><code>11111110</code>: Invalid byte.</li>
             <li><code>11111111</code>: Invalid byte.</li>
         </ul>
-        <h2>Other Encodings</h2>
-        <p>Since the release of the Unicode 2.0 specification, other encodings have emerged to permit Unicode text to be used in certain niche scenarios. Of these, only UTF-32 is officially a part of the Unicode specification.</p>
-        <ul>
-            <li><strong>UTF-7</strong>: Allows Unicode to pass through 7-bit systems, such as legacy teletype described above.</li>
-            <li><strong>UTF-32</strong>: Stores all values directly as four-byte integers.</li>
-            <li><strong>UTF-EBCDIC</strong>: Allows Unicode to pass through legacy EBCDIC mainframes.</li>
-            <li><strong>GB 18030</strong>: China's internal encoding which extends their GB 2312-1980 system, but in a way that also supports every possible Unicode character.</li>
-            <li><strong>CESU-8</strong>: Like UTF-8, except extended sequences are encoded using surrogate pairs instead of directly; therefore, four-byte sequences are not used.</li>
-            <li><strong>WTF-8</strong>: Effectively combines UTF-8 and CESU-8, permitting extended characters to be encoded either directly or as surrogate pairs.</li>
-        </ul>
         <h2>Comparison of Encodings</h2>
+        <p>Since the release of the Unicode 2.0 specification, other encodings have emerged to permit Unicode text to be used in certain niche scenarios. Of these, only UTF-32 is officially a part of the Unicode specification.</p>
         <p>The different encodings are compared below. The column labeled "Extended" refers to how the scheme encodes characters outside of the original UCS-2 range.</p>
         <p>
             <table class="narrow">
@@ -151,8 +142,15 @@
         <p>This encoding is almost never encountered in the wild. Some language runtimes use it internally for string representation.</p>
         <p>It should be noted that the most significant byte is always going to be null, as Unicode itself only requires 21 bits of precision to adequately address all possible characters.</p>
         <h3>UTF-EBCDIC</h3>
-        <p>No meaningful commentary is currently offered here.</p>
+        <p>No meaningful commentary is currently offered here, except that EBCDIC platforms typically use UTF-16 for storing Unicode, for some reason.</p>
         <h3>GB 18030</h3>
-        <p>Check back here for later updates!</p>
+        <p>This is China's native encoding scheme for Unicode. Its purpose is to store Unicode characters in a manner that is compatible with GBK (1991), which itself is an extension of GB 2312 (1980). Because it is a forwards-compatible extension of these legacy, non-Unicode encodings, lookup tables must be used to map to and from Unicode code points.</p>
+        <p>The 2000 and 2005 revisions of this encoding utilized Unicode's Private Use Area to represent characters that were found in GBK, but that were not found in Unicode at the time. With the advent of the 2022 revision, Unicode now contains these missing characters, thereby permitting the 2022 revision to represent them natively.</p>
+        <p>Despite requiring lookup tables, it does have the ability to represent Basic ASCII characters with a single byte while still representing common Chinese characters with just two bytes, whereas UTF-8 requires three. It lacks UTF-8's self-synchronization capability, however, allowing a corrupted GBK sequence to corrupt the rest of the text buffer.</p>
+        <p>It should be noted that Chinese websites overwhelmingly use UTF-8, including those of the Chinese Communist Party.</p>
+        <h3>CESU-8</h3>
+        <p>This is a modification of UTF-8. The difference is that UTF-8 encodes extended characters directly whereas CESU-8 uses surrogate pairs. As such, four-byte sequences never occurr in CESU-8.</p>
+        <h3>WTF-8</h3>
+        <p>This is a combination of UTF-8 and CESU-8. Extended characters may be directly encoded as four-byte sequences, but they may also appear as a surrogate pair of twin three-byte sequences.</p>
     </body>
 </html>
