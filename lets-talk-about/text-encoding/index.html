@@ -139,17 +139,17 @@
         <p>Despite being the native encoding for Unicode 2.0 and later, UTF-16 is not commonly used anymore in new systems. An argument could be made that UTF-16 bitstreams are cleaner when it comes to processing and validating them. Specifically, UTF-16's design makes only two types of encoding errors possible.</p>
         <p>If the need to interoperate with UCS-2 ever presents itself, then UTF-16 becomes the only sensible option for doing so. In other cases, it may be desireable to use it internally for enclosed systems, as its representation is arguably cleaner.</p>
         <h3>UTF-32</h3>
-        <p>This encoding is almost never encountered in the wild. Some language runtimes use it internally for string representation.</p>
+        <p>This encoding is almost never encountered in the wild, although some language runtimes use it internally for string representation. The idea is that any Unicode character in a buffer can be decoded without having to first decode the ones that precede it. While this ability may sound useful at first, it has very limited utility in practice.</p>
         <p>It should be noted that the most significant byte is always going to be null, as Unicode itself only requires 21 bits of precision to adequately address all possible characters.</p>
         <h3>UTF-EBCDIC</h3>
         <p>No meaningful commentary is currently offered here, except that EBCDIC platforms typically use UTF-16 for storing Unicode, for some reason.</p>
         <h3>GB 18030</h3>
-        <p>This is China's native encoding scheme for Unicode. Its purpose is to store Unicode characters in a manner that is compatible with GBK (1991), which itself is an extension of GB 2312 (1980). Because it is a forwards-compatible extension of these legacy, non-Unicode encodings, lookup tables must be used to map to and from Unicode code points.</p>
+        <p>This is China's native encoding scheme for Unicode. Its purpose is to store Unicode characters in a manner that is compatible with GBK (1991), which itself is an extension of GB 2312 (1980). Because it is a forwards-compatible extension of these legacy, non-Unicode encodings, lookup tables must be used to map between pre-existing GBK characters and Unicode characters. Unicode characters not found in GBK are encoded algorithmically.</p>
         <p>The 2000 and 2005 revisions of this encoding utilized Unicode's Private Use Area to represent characters that were found in GBK, but that were not found in Unicode at the time. With the advent of the 2022 revision, Unicode now contains these missing characters, thereby permitting the 2022 revision to represent them natively.</p>
         <p>Despite requiring lookup tables, it does have the ability to represent Basic ASCII characters with a single byte while still representing common Chinese characters with just two bytes, whereas UTF-8 requires three. It lacks UTF-8's self-synchronization capability, however, allowing a corrupted GBK sequence to corrupt the rest of the text buffer.</p>
         <p>It should be noted that Chinese websites overwhelmingly use UTF-8, including those of the Chinese Communist Party.</p>
         <h3>CESU-8</h3>
-        <p>This is a modification of UTF-8. The difference is that UTF-8 encodes extended characters directly whereas CESU-8 uses surrogate pairs. As such, four-byte sequences never occurr in CESU-8.</p>
+        <p>This is a modification of UTF-8. The difference is that UTF-8 encodes extended characters directly whereas CESU-8 uses surrogate pairs. As such, four-byte sequences never occur in CESU-8.</p>
         <h3>WTF-8</h3>
         <p>This is a combination of UTF-8 and CESU-8. Extended characters may be directly encoded as four-byte sequences, but they may also appear as a surrogate pair of twin three-byte sequences.</p>
     </body>
