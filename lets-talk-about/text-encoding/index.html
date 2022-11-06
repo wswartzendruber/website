@@ -51,7 +51,7 @@
         <p>UTF-16 is the native encoding scheme for Unicode 2.0 and later, and Unicode's current limit of 1,112,064 unique code points stems from the number of unique values that UTF-16 can address with its basic (UCS-2) and surrogate pair systems combined.</p>
         <p>And so getting the UCS-2 operating systems and runtimes extended to handle the larger Unicode 2.0+ code page was taken care of, but what about systems that couldn't handle null bytes?</p>
         <h3>UTF-8</h3>
-        <p>Before I get into this, I have to say that UTF-8 is easily in the top five most ingenious things to ever happen in computer science. The engineer who created it did so on the back of a napkin in a cafeteria. He also deserves a Nobel Prize. I'll tell you why...</p>
+        <p>Before I get into this, I have to say that UTF-8 is easily in the top five most ingenious things to ever happen in computer science. The engineer who created it, Ken Thompson, did so on the back of a napkin in a diner. He also deserves a Nobel Prize. I'll tell you why...</p>
         <p>UTF-8 encodes all possible Unicode 2.0+ values using anywhere from one to four bytes. Now remember up above where I said that the Unicode code page extended the Basic ASCII code page? Well, UTF-8 encodes these values as single bytes. Not only that, but single bytes that are identical to their Basic ASCII counterparts. This means that UTF-8 that contains only Basic ASCII is itself Basic ASCII. And, any Basic ASCII text can be natively interpreted by UTF-8 as-is.</p>
         <p>Anything outside of that Basic ASCII range requires two to four bytes. Here are the possible bit patterns that UTF-8 currently uses:</p>
         <ul>
@@ -72,58 +72,67 @@
             <li><code>111110XX</code>: The first byte of a five-byte character (not valid UTF-8).</li>
             <li><code>1111110X</code>: The first byte of a six-byte character (not valid UTF-8).</li>
             <li><code>10XXXXXX</code>: A continuation byte of a multi-byte character.</li>
-            <li><code>11111110</code>: Invalid byte.</li>
-            <li><code>11111111</code>: Invalid byte.</li>
+            <li><code>11111110</code>: Not valid UTF-8.</li>
+            <li><code>11111111</code>: Not valid UTF-8.</li>
         </ul>
-        <h2>Comparison of Encodings</h2>
-        <p>Since the release of the Unicode 2.0 specification, other encodings have emerged to permit Unicode text to be used in certain niche scenarios. Of these, only UTF-32 is officially a part of the Unicode specification.</p>
-        <p>The different encodings are compared below. The column labeled "Extended" refers to how the scheme encodes characters outside of the original UCS-2 range.</p>
+        <p>The most common manner in which UTF-8 was deployed was for it to be treated as its own legacy code page. Ergo, any format with configurable code pages could simply be set to UTF-8 instead of one of the region-specific values. Numerous applications were extended to support Unicode via this mechanism. By the year 2000, both Netscape Navigator and Internet Explorer were accustomed to seeing UTF-8 being declared in Web pages and were able to properly display the encoded Unicode characters, provided that the requisite fonts were also installed.</p>
+        <h2>Comparison of Encodings Today</h2>
+        <p>Since the release of the Unicode 2.0 specification, other encodings have emerged to permit Unicode text to be used in certain niche scenarios. Of everything listed below, only UTF-8, UTF-16, and UTF-32 are officially a part of that specification.</p>
         <p>
-            <table class="narrow">
+            <table class="medium">
                 <tr>
                     <th>Name</th>
                     <th>Bytes</th>
                     <th>Extended Characters</th>
+                    <th>ASCII Compatible</th>
                 </tr>
                 <tr>
                     <td>UTF-7</td>
                     <td>1-8</td>
                     <td>Surrogate Encoding</td>
+                    <td>Yes</td>
                 </tr>
                 <tr>
                     <td>UTF-8</td>
                     <td>1-4</td>
                     <td>Direct Encoding</td>
+                    <td>Yes</td>
                 </tr>
                 <tr>
                     <td>UTF-16</td>
                     <td>2, 4</td>
                     <td>Surrogate Encoding</td>
+                    <td>No</td>
                 </tr>
                 <tr>
                     <td>UTF-32</td>
                     <td>4</td>
                     <td>Direct Encoding</td>
+                    <td>No</td>
                 </tr>
                 <tr>
                     <td>UTF-EBCDIC</td>
                     <td>1-5</td>
                     <td>Direct Encoding</td>
+                    <td>No</td>
                 </tr>
                 <tr>
                     <td>GB 18030</td>
                     <td>1, 2, 4</td>
                     <td>Direct Encoding</td>
+                    <td>Yes</td>
                 </tr>
                 <tr>
                     <td>CESU-8</td>
                     <td>1-3</td>
                     <td>Surrogate Encoding</td>
+                    <td>Yes</td>
                 </tr>
                 <tr>
                     <td>WTF-8</td>
                     <td>1-4</td>
                     <td>Both</td>
+                    <td>Yes</td>
                 </tr>
             </table>
         </p>
@@ -131,8 +140,7 @@
         <p>Currently defined by RFC 2152, this encoding is not really used anymore. It originally found its place in allowing Unicode to pass through 7-bit MIME email. In recent years, mail systems have come to support the 8BITMIME extension, allowing UTF-8 to effortlessly pass through instead.</p>
         <p>In recent versions of .NET, The <code>System.Text.Encoding.UTF7Encoding</code> class, while present, results in an exception being thrown. This is due to security issues with the format itself. Browsers that are compliant with HTML5 are required to reject UTF-7 as an encoding.</p>
         <h3>UTF-8</h3>
-        <p>In spirit, UTF-8 exists to allow Unicode to pass through any system that is ASCII-centric. This includes things like HTML and XML, which support declaring their encodings using only non-null Basic ASCII bytes (which is something UTF-16 cannot do).</p>
-        <p><strong>In reality, UTF-8 has completely taken over as the defacto standard encoding for all new scenarios.</strong> It's most prominent rise has been with the World Wide Web, where virtually all sites in existence use it as their encoding regardless of their language. ASCII-centric operating systems and utilities also rely on it to enable full Unicode support without incuring any breaking changes.</p>
+        <p>Originally, UTF-8 existed to allow Unicode to be supported in legacy applications and formats that used configurable code pages. <strong>Today, UTF-8 has completely taken over as the defacto standard encoding for all scenarios, both legacy and modern.</strong> It's most prominent rise on the legacy side has been with the World Wide Web, where virtually all sites in existence declare it as their encoding regardless of their language. On the more modern side, GNU/Linux and its accompanying utilities treat it as their native encoding, often times without the ability to configure something else.</p>
         <p>If the question of which encoding to use ever arises, the answer is most likely UTF-8.</p>
         <p>With all this said, <strong>UTF-8 decoder implementations must take care to exercise proper security practices as defined by the Unicode specification</strong>.</p>
         <h3>UTF-16</h3>

@@ -13,6 +13,10 @@
         width: 33%;
     }
 
+    table.medium {
+        width: 66%;
+    }
+
     th, td {
         padding: 8px;
     }

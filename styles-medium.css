@@ -12,6 +12,10 @@
         width: 50%;
     }
 
+    table.medium {
+        width: 75%;
+    }
+
     th, td {
         padding: 4px;
     }
