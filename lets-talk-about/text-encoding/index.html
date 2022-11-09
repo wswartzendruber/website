@@ -52,7 +52,7 @@
         <p>And so getting the UCS-2 operating systems and runtimes extended to handle the larger Unicode 2.0+ code page was taken care of, but what about systems that couldn't handle null bytes?</p>
         <h3>UTF-8</h3>
         <p>Before I get into this, I have to say that UTF-8 is easily in the top five most ingenious things to ever happen in computer science. The engineer who created it, Ken Thompson, did so on the back of a napkin in a diner. He also deserves a Nobel Prize. I'll tell you why...</p>
-        <p>UTF-8 encodes all possible Unicode 2.0+ values using anywhere from one to four bytes. Now remember up above where I said that the Unicode code page extended the Basic ASCII code page? Well, UTF-8 encodes these values as single bytes. Not only that, but single bytes that are identical to their Basic ASCII counterparts. This means that UTF-8 that contains only Basic ASCII is itself Basic ASCII. And, any Basic ASCII text can be natively interpreted by UTF-8 as-is.</p>
+        <p>UTF-8 encodes all possible Unicode 2.0+ values using anywhere from one to four bytes. Now remember up above where I said that the Unicode code page extended the Basic ASCII code page? Well, UTF-8 encodes these values as single bytes. Not only that, but as single bytes that are identical to their Basic ASCII counterparts. This means that UTF-8 containing only Basic ASCII is itself Basic ASCII. And, any Basic ASCII text can be natively interpreted by UTF-8 as-is.</p>
         <p>Anything outside of that Basic ASCII range requires two to four bytes. Here are the possible bit patterns that UTF-8 currently uses:</p>
         <ul>
             <li><code>0XXXXXXX</code></li>
@@ -60,10 +60,9 @@
             <li><code>1110XXXX 10XXXXXX 10XXXXXX</code></li>
             <li><code>11110XXX 10XXXXXX 10XXXXXX 10XXXXXX</code></li>
         </ul>
-        <p>The <code>X</code> placeholders are where arbitrary bits for the code point value are stored. Any UTF-8 sequence whose byte starts with a zero bit is therefore Basic ASCII and is encoded as such. Code points outside of this range don't cause problems for legacy systems either, they are just interpreted as some Extended ASCII character from some arbitrary code page, which is fine.</p>
-        <p>Note that the four byte sequences are used for encoding extended characters directly as opposed to the surrogate mechanism used by UTF-16. It is against specification to encode a surrogate itself with UTF-8.</p>
-        <p>Another useful aspect of UTF-8 is its self-synchronization feature. This makes it possible to skip to the middle of a UTF-8 byte stream and determine what role in a character the current byte plays.</p>
-        <p>For example:</p>
+        <p>The <code>X</code> placeholders are where arbitrary bits for code point values are stored. Any UTF-8 sequence whose byte starts with a zero bit is Basic ASCII and is therefore encoded as such; legacy systems already display these properly. Meanwhile, code points outside of this range appear to legacy systems as a sequence of Extended ASCII characters; legacy systems may not display them properly, but they will not cause problems, either. Null bytes are never encountered unless specifically intended.</p>
+        <p>Note that the four byte sequences are used for encoding extended characters directly as opposed to using the surrogate mechanism used by UTF-16. It is against specification to encode a surrogate itself with UTF-8.</p>
+        <p>Another useful aspect of UTF-8 is its self-synchronization feature. This makes it possible to skip to the middle of a UTF-8 byte stream and determine what role in a character the current byte plays:</p>
         <ul>
             <li><code>0XXXXXXX</code>: A complete Basic ASCII character.</li>
             <li><code>110XXXXX</code>: The first byte of a two-byte character.</li>
@@ -75,9 +74,9 @@
             <li><code>11111110</code>: Not valid UTF-8.</li>
             <li><code>11111111</code>: Not valid UTF-8.</li>
         </ul>
-        <p>The most common manner in which UTF-8 was deployed was for it to be treated as its own legacy code page. Ergo, any format with configurable code pages could simply be set to UTF-8 instead of one of the region-specific values. Numerous applications were extended to support Unicode via this mechanism. By the year 2000, both Netscape Navigator and Internet Explorer were accustomed to seeing UTF-8 being declared in Web pages and were able to properly display the encoded Unicode characters, provided that the requisite fonts were also installed.</p>
+        <p>Being ASCII-compatible in this manner allowed UTF-8 to be treated as the single drop-in replacement for all region-specific code pages. Effectively, UTF-8 bridged the gap between the prevalent world of ASCII and the new world of Unicode. Unicode's prominence today is owed entirely to this bridge.</p>
         <h2>Comparison of Encodings Today</h2>
-        <p>Since the release of the Unicode 2.0 specification, other encodings have emerged to permit Unicode text to be used in certain niche scenarios. Of everything listed below, only UTF-8, UTF-16, and UTF-32 are officially a part of that specification.</p>
+        <p>Since the release of the Unicode 2.0 specification, other encodings have emerged to permit Unicode to be used in certain niche scenarios. Of everything listed below, only UTF-8, UTF-16, and UTF-32 are officially a part of that specification.</p>
         <p>
             <table class="medium">
                 <tr>
@@ -140,11 +139,15 @@
         <p>Currently defined by RFC 2152, this encoding is not really used anymore. It originally found its place in allowing Unicode to pass through 7-bit MIME email. In recent years, mail systems have come to support the 8BITMIME extension, allowing UTF-8 to effortlessly pass through instead.</p>
         <p>In recent versions of .NET, The <code>System.Text.Encoding.UTF7Encoding</code> class, while present, results in an exception being thrown. This is due to security issues with the format itself. Browsers that are compliant with HTML5 are required to reject UTF-7 as an encoding.</p>
         <h3>UTF-8</h3>
-        <p>Originally, UTF-8 existed to allow Unicode to be supported in legacy applications and formats that used configurable code pages. <strong>Today, UTF-8 has completely taken over as the defacto standard encoding for all scenarios, both legacy and modern.</strong> It's most prominent rise on the legacy side has been with the World Wide Web, where virtually all sites in existence declare it as their encoding regardless of their language. On the more modern side, GNU/Linux and its accompanying utilities treat it as their native encoding, often times without the ability to configure something else.</p>
+        <p>Originally, UTF-8 existed to allow Unicode to be supported in legacy systems that used region-specific code pages. <strong>Today, UTF-8 has completely taken over as the defacto standard encoding for all scenarios, both legacy and modern.</strong> It's most prominent rise on the legacy side has been with the World Wide Web, where virtually all sites in existence declare it as their encoding regardless of their language. On the more modern side, GNU/Linux and its accompanying utilities treat it as their native encoding, often times without the ability to configure something else.</p>
         <p>If the question of which encoding to use ever arises, the answer is most likely UTF-8.</p>
         <p>With all this said, <strong>UTF-8 decoder implementations must take care to exercise proper security practices as defined by the Unicode specification</strong>.</p>
         <h3>UTF-16</h3>
-        <p>Despite being the native encoding for Unicode 2.0 and later, UTF-16 is not commonly used anymore in new systems. An argument could be made that UTF-16 bitstreams are cleaner when it comes to processing and validating them. Specifically, UTF-16's design makes only two types of encoding errors possible.</p>
+        <p>Despite being the native encoding for Unicode 2.0 and later, UTF-16 is not commonly used anymore in new systems. An argument could be made that UTF-16 bitstreams are cleaner when it comes to processing and validating them. Specifically, UTF-16's design makes only two types of encoding errors possible:</p>
+        <ol>
+            <li>Initial low surrogate</li>
+            <li>High surrogate not followed by low surrogate</li>
+        </ol>
         <p>If the need to interoperate with UCS-2 ever presents itself, then UTF-16 becomes the only sensible option for doing so. In other cases, it may be desireable to use it internally for enclosed systems, as its representation is arguably cleaner.</p>
         <h3>UTF-32</h3>
         <p>This encoding is almost never encountered in the wild, although some language runtimes use it internally for string representation. The idea is that any Unicode character in a buffer can be decoded without having to first decode the ones that precede it. While this ability may sound useful at first, it has very limited utility in practice.</p>
@@ -152,8 +155,8 @@
         <h3>UTF-EBCDIC</h3>
         <p>No meaningful commentary is currently offered here, except that EBCDIC platforms typically use UTF-16 for storing Unicode, for some reason.</p>
         <h3>GB 18030</h3>
-        <p>This is China's native encoding scheme for Unicode. Its purpose is to store Unicode characters in a manner that is compatible with GBK (1991), which itself is an extension of GB 2312 (1980). Because it is a forwards-compatible extension of these legacy, non-Unicode encodings, lookup tables must be used to map between pre-existing GBK characters and Unicode characters. Unicode characters not found in GBK are encoded algorithmically.</p>
-        <p>The 2000 and 2005 revisions of this encoding utilized Unicode's Private Use Area to represent characters that were found in GBK, but that were not found in Unicode at the time. With the advent of the 2022 revision, Unicode now contains these missing characters, thereby permitting the 2022 revision to represent them natively.</p>
+        <p>This is China's native encoding scheme for Unicode. Its purpose is to store Unicode characters in a manner that is compatible with GBK (1991), which itself is an extension of GB 2312 (1980). Because it is a forwards-compatible extension of these legacy encodings, lookup tables must be used to map between pre-existing GBK code points and Unicode code points. Unicode code points not found in GBK are encoded algorithmically.</p>
+        <p>The 2000 and 2005 revisions of this encoding utilized Unicode's Private Use Area to represent characters that were found in GBK, but that were not found in Unicode at the time. With the advent of the 2022 revision, Unicode now contains these missing characters, thereby permitting the 2022 revision to address them in Unicode natively.</p>
         <p>Despite requiring lookup tables, it does have the ability to represent Basic ASCII characters with a single byte while still representing common Chinese characters with just two bytes, whereas UTF-8 requires three. It lacks UTF-8's self-synchronization capability, however, allowing a corrupted GBK sequence to corrupt the rest of the text buffer.</p>
         <p>It should be noted that Chinese websites overwhelmingly use UTF-8, including those of the Chinese Communist Party.</p>
         <h3>CESU-8</h3>
