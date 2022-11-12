@@ -65,12 +65,12 @@
         <p>Another useful aspect of UTF-8 is its self-synchronization feature. This makes it possible to skip to the middle of a UTF-8 byte stream and determine what role in a character the current byte plays:</p>
         <ul>
             <li><code>0XXXXXXX</code>: A complete Basic ASCII character.</li>
+            <li><code>10XXXXXX</code>: A continuation byte of a multi-byte character.</li>
             <li><code>110XXXXX</code>: The first byte of a two-byte character.</li>
             <li><code>1110XXXX</code>: The first byte of a three-byte character.</li>
             <li><code>11110XXX</code>: The first byte of a four-byte character.</li>
             <li><code>111110XX</code>: The first byte of a five-byte character (not valid UTF-8).</li>
             <li><code>1111110X</code>: The first byte of a six-byte character (not valid UTF-8).</li>
-            <li><code>10XXXXXX</code>: A continuation byte of a multi-byte character.</li>
             <li><code>11111110</code>: Not valid UTF-8.</li>
             <li><code>11111111</code>: Not valid UTF-8.</li>
         </ul>
@@ -139,14 +139,25 @@
         <p>Currently defined by RFC 2152, this encoding is not really used anymore. It originally found its place in allowing Unicode to pass through 7-bit MIME email. In recent years, mail systems have come to support the 8BITMIME extension, allowing UTF-8 to effortlessly pass through instead.</p>
         <p>In recent versions of .NET, The <code>System.Text.Encoding.UTF7Encoding</code> class, while present, results in an exception being thrown. This is due to security issues with the format itself. Browsers that are compliant with HTML5 are required to reject UTF-7 as an encoding.</p>
         <h3>UTF-8</h3>
-        <p>Originally, UTF-8 existed to allow Unicode to be supported in legacy systems that used region-specific code pages. <strong>Today, UTF-8 has completely taken over as the defacto standard encoding for all scenarios, both legacy and modern.</strong> It's most prominent rise on the legacy side has been with the World Wide Web, where virtually all sites in existence declare it as their encoding regardless of their language. On the more modern side, GNU/Linux and its accompanying utilities treat it as their native encoding, often times without the ability to configure something else.</p>
-        <p>If the question of which encoding to use ever arises, the answer is most likely UTF-8.</p>
-        <p>With all this said, <strong>UTF-8 decoder implementations must take care to exercise proper security practices as defined by the Unicode specification</strong>.</p>
+        <p>Originally, UTF-8 existed to allow Unicode to be supported on legacy systems that used region-specific code pages. Today, <strong>UTF-8 has completely taken over as the defacto standard encoding for all scenarios, both legacy and new</strong>. It's most prominent rise on the legacy side has been with the World Wide Web, where virtually all sites in existence declare it as their encoding regardless of their language. When it comes to new systems, UTF-8 is typically chosen as the only supported encoding, usually without consideration for anything else. Examples of this include:</p>
+        <ul>
+            <li>Google's RCS protocol defines UTF-8 whereas the previous SMS protocol defined UCS-2.</li>
+            <li>Matroska, a very popular multimedia container format, defines UTF-8.</li>
+            <li>Java 9 and later use UTF-8 for properties files.</li>
+        </ul>
+        <p>With all this said, <strong>UTF-8 decoder implementations must take care to exercise proper security practices</strong>. Specifically, UTF-8 byte streams may be malformed in the following ways:</p>
+        <ol>
+            <li>Invalid byte (any byte greater than <code>0b11110111</code> or <code>0xF7</code>).</li>
+            <li>Incomplete sequence (expected a continuation byte but got something else).</li>
+            <li>Unexpected continuation byte (such a byte appears as the beginning of a new sequence).</li>
+            <li>Overlong value (decoded value is represented by more bytes than necessary).</li>
+            <li>Invalid value (decoded value exceeds <code>U+10FFFF</code> or lies in the surrogate range).</li>
+        </ol>
         <h3>UTF-16</h3>
         <p>Despite being the native encoding for Unicode 2.0 and later, UTF-16 is not commonly used anymore in new systems. An argument could be made that UTF-16 bitstreams are cleaner when it comes to processing and validating them. Specifically, UTF-16's design makes only two types of encoding errors possible:</p>
         <ol>
-            <li>Initial low surrogate</li>
-            <li>High surrogate not followed by low surrogate</li>
+            <li>Initial low surrogate.</li>
+            <li>High surrogate not followed by low surrogate.</li>
         </ol>
         <p>If the need to interoperate with UCS-2 ever presents itself, then UTF-16 becomes the only sensible option for doing so. In other cases, it may be desireable to use it internally for enclosed systems, as its representation is arguably cleaner.</p>
         <h3>UTF-32</h3>
