@@ -136,7 +136,8 @@
             </table>
         </p>
         <h3>UTF-7</h3>
-        <p>Currently defined by RFC 2152, this encoding is not really used anymore. It originally found its place in allowing Unicode to pass through 7-bit MIME email. In recent years, mail systems have come to support the 8BITMIME extension, allowing UTF-8 to effortlessly pass through instead.</p>
+        <p>Currently defined by RFC 2152, this encoding is not really used anymore. The idea is to encode certain ASCII characters directly while using inline Base-64 for everything else. This inherently does not self-synchronize that well as seeking to the middle of an ASCII string could mean either directly encoded characters or inline Base-64.</p>
+        <p>It originally found its place in allowing Unicode to pass through 7-bit MIME email. In recent years, mail systems have come to support the 8BITMIME extension, allowing UTF-8 to effortlessly pass through instead.</p>
         <p>In recent versions of .NET, The <code>System.Text.Encoding.UTF7Encoding</code> class, while present, results in an exception being thrown. This is due to security issues with the format itself. Browsers that are compliant with HTML5 are required to reject UTF-7 as an encoding.</p>
         <h3>UTF-8</h3>
         <p>Originally, UTF-8 existed to allow Unicode to be supported on legacy systems that used region-specific code pages. Today, <strong>UTF-8 has completely taken over as the defacto standard encoding for all scenarios, both legacy and new</strong>. It's most prominent rise on the legacy side has been with the World Wide Web, where virtually all sites in existence declare it as their encoding regardless of their language. When it comes to new systems, UTF-8 is typically chosen as the only supported encoding, usually without consideration for anything else. Examples of this include:</p>
