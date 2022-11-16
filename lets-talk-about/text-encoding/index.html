@@ -20,7 +20,7 @@
         <p><img src="ascii.png" class="full-width" alt="ASCII"></p>
         <p>This is the system that the United States used for teletype and it became widely adopted as an industry standard.</p>
         <h2>A While Later: Computers</h2>
-        <p>Sometime in the 1970s, personal computers started to become a thing. And like teletype systems, they also needed to be able to represent linguistic symbols using binary code. Except computers are a bit different from teletype. Whereas teletype doesn't care about how many bits are assigned to a symbol, computers like to have everything be accessible in even powers two. ASCII was a logical choice for computers, but it was a 7-bit system. Seven is not a power of two, but eight is. Eight bits became commonly known as a byte. And each ASCII value was represented with a single byte, except the first bit was typically set to zero (since it wasn't needed).</p>
+        <p>Sometime in the 1970s, personal computers started to become a thing. And like teletype systems, they also needed to be able to represent linguistic symbols using binary code. Except computers are a bit different from teletype: Whereas teletype doesn't care about how many bits are assigned to a symbol, computers like to have everything be accessible in even powers two. ASCII was a logical choice for computers, but it was a 7-bit system. Seven is not a power of two, but eight is. Eight bits became commonly known as a byte and each ASCII value was represented with a single byte, except the first bit was typically set to zero (since it wasn't needed).</p>
         <p>Well, this gives us a whole extra bit to work with. Meaning, we have ASCII from 1962 with bit patterns of <code>0XXXXXXX</code> (Basic ASCII), but we can also define a whole different code page with bit patterns of <code>1XXXXXXX</code> (Extended ASCII).</p>
         <p>The most common Extended ASCII code page that I remember is called CP437:</p>
         <p><img src="cp437.png" class="full-width" alt="CP437"></p>
@@ -29,30 +29,30 @@
         <p>The United States may have adopted CP437 as its Extended ASCII code page, but other regions of the world had little use for it. What they did have use for, however, was repurposing the Extended ASCII range to contain their own localized linguistic symbols. Well, here's the problem. All files really contain is bytes of data, and computers only know to display that data according to the code page they're configured for. Computers back then didn't know or care about which code page a file was really encoded in, they would simply display it as they knew how. Imagine opening a Russian file on a machine configured for Israel's code page. You'll see Hebrew, but it will be absolute gibberish. And for that matter, if you find a text file, how do you even know what code page it's encoded with?</p>
         <h2>One Code Page to Rule Them All: Unicode</h2>
         <p>Well this system of different, incompatible code pages may have been fine for data staying within a region, but it made international document exchange extremely tedious. What the industry wanted was a single code page that contained any linguistic symbol anyone could possibly want to show.</p>
-        <p>And so the industry created Unicode 1.0 and released it in October of 1991. Now pay attention to this next part because it's extremely important: The Unicode code page extended the original 7-bit ASCII code page. That means the code point values for English letters, numbers, and symbols all stayed the same between Basic ASCII and the new Unicode system. Therefore, any Unicode code points between 0 and 127 inherently refer to Basic ASCII characters. But that is where the similarities end.</p>
-        <p>Unicode 1.0 didn't address 256 unique values like the existing Extended ASCII schemes, it addressed 65,536 unique values. This was accomplished by using two bytes to encode each code point instead of one. And when it came to Basic ASCII (which only needed one byte), each one was preceded by a null byte. So while a single byte of <code>0x20</code> represents a space in Basic ASCII, two bytes of <code>0x00</code> and <code>0x20</code> are used to do so here. This encoding scheme was called UCS-2.</p>
-        <p>Now pay attention again, because this next part is also critically important: UCS-2 could not safely pass through most text buffers at the time. Remember that UCS-2 encodes Basic ASCII values by prepending a null byte. Well, most text buffers assume a null byte to mark the end of the text sequence. ASCII sequences would have them deliberately inserted for this purpose only, but UCS-2 did it for every character in the English language. In other words, your English text would terminate before it even began.</p>
+        <p>And so the industry created Unicode 1.0 and released it in October of 1991. It defined a code page of 65,536 code points now known as the <strong>Basic Multilingual Plane</strong>, or <strong>BMP</strong> for short. Now pay attention to this next part because it's extremely important: The BMP extended the original 7-bit ASCII code page. That means the code point values for English letters, numbers, and symbols all stayed the same between Basic ASCII and the new Unicode system. Therefore, any BMP code points between 0 and 127 inherently refer to Basic ASCII. But that is where the similarities end.</p>
+        <p>Addressing 65,536 unique code points was accomplished by using two bytes instead of one. When it came to Basic ASCII (which only needed one byte), each one was preceded by a null byte. So while a single byte of <code>0x20</code> represents a space in Basic ASCII, two bytes of <code>0x00</code> and <code>0x20</code> are used to do so here. This encoding scheme was called UCS-2.</p>
+        <p>Now pay attention again, because this next part is also critically important: UCS-2 could not safely pass through most text buffers at the time. Remember that UCS-2 encodes Basic ASCII code points by prepending a null byte. Well, most text buffers assume a null byte to mark the end of the text sequence. ASCII sequences would have them deliberately inserted for this purpose only, but UCS-2 did it for every character in the English language. In other words, your English text would terminate before it even began.</p>
         <p>Despite this glaring shortcoming, Windows NT, Mac OS, Java, and JavaScript all jumped on the UCS-2 bandwagon. Their text handling runtimes were renovated to internally use it. And this was fine for them because their buffers didn't terminate due to the presence of a single null byte (anymore).</p>
         <p>But there was a problem: Almost nobody used Windows NT, Mac OS, Java, or JavaScript; so almost nobody could handle UCS-2. And given that MS-DOS, Windows 3.x, and Windows 9x couldn't even transport it because of the null byte issue, there was really no integration path forward for handling Unicode on these predominant systems.</p>
-        <p>And to top things off, people were realizing that a code page of 65,535 characters simply wasn't enough.</p>
+        <p>And to top things off, people were realizing that a code page with 65,536 entries simply wasn't going to be enough.</p>
         <h2>Let's Try This Again: Unicode 2.0</h2>
         <p>The Unicode Consortium went back to the drawing board. They had three major issues to solve:</p>
         <ol>
-            <li>Extend the original Unicode code page.</li>
-            <li>Extend the existing UCS-2 scheme to address these extra characters.</li>
-            <li>Extend ASCII into a new encoding to address all of this as well.</li>
+            <li>Extend the Unicode code page to support more code points.</li>
+            <li>Extend the 16-bit UCS-2 encoding to address the BMP along with these extra code points.</li>
+            <li>Create an 8-bit encoding that can address all code points on prevalent systems.</li>
         </ol>
-        <p>The decision was ultimately made to decouple code point values from how they were stored in memory. In other words, the Unicode code page would still exist, but that code page wouldn't dictate how to convert code point values into bytes.</p>
-        <p>Two separate encodings were devised:</p>
+        <h3>A Larger Code Page</h3>
+        <p>The Unicode code page was ultimately extended by appending sixteen supplemental planes to the existing Basic Multilingual Plane. This kept the code point values for the BMP the same as before, but added new ones after it for the sixteen other planes. Each supplemental plane, like the BMP, contains 65,536 code points.</p>
         <h3>UTF-16</h3>
-        <p>While simply tossing UCS-2 and redefining a more concise replacement would have been desired, it was ultimately infeasible. Microsoft had already begun moving internally to make all new versions of Windows based on NT. Meanwhile, Java and JavaScript had already begun to see an uptick in popularity. Unfortunately, UCS-2 was here to stay. But fortunately, there was an extension path forward.
-        <p>Unicode 1.0 didn't define all 65,536 possible code points. It left a large chunk of them undefined for future use. Part of this available segment was taken and split into two different ranges called surrogates. One subrange was the high surrogates and the other was the low surrogates. A single high surrogate value and a single low surrogate value could then be combined to address an extended character. This scheme was called UTF-16, and Windows NT, Mac OS, Java, and JavaScript were all updated to understand this surrogate concept.</p>
-        <p>All UCS-2 that is within the Unicode 1.0 code page is inherently valid UTF-16. And UTF-16 can be safely stored by legacy UCS-2 systems so long as those systems do not truncate or cut text. This is because UCS-2 is not surrogate-aware and will happily separate a compound pair.</p>
+        <p>With the Unicode 2.0 code page massively expanded, UCS-2 needed to be extended to address these additional planes. While simply tossing it and redefining a more concise replacement would have been desired, it was ultimately infeasible. Microsoft had already begun moving internally to make all new versions of Windows based on NT. Meanwhile, Java and JavaScript had already begun to see an uptick in popularity. Unfortunately, UCS-2 was here to stay. But fortunately, there was an extension path forward.
+        <p>Unicode 1.0 didn't define characters for all 65,536 code points within the BMP. It left a large chunk of them open for future use. Part of this available segment was taken and split into two different ranges called surrogates. One subrange was the high surrogates and the other was the low surrogates. A single high surrogate and a single low surrogate could then be combined to form a surrogate pair in order to address a supplemental character. So while UCS-2 considered a surrogate pair to be two separate characters, this new UTF-16 scheme saw each one as a single supplemental character. Windows NT, Mac OS, Java, and JavaScript were all updated from UCS-2 to UTF-16, thereby allowing them to understand surrogate pairs and the supplemental characters they represent.</p>
+        <p>Therefore, all UCS-2 that is within the defined Unicode 1.0 code page is inherently valid UTF-16. And UTF-16 can be safely stored by legacy UCS-2 systems so long as those systems do not truncate or cut text. This is, again, because UCS-2 is not surrogate-aware and will happily separate a compound pair.</p>
         <p>UTF-16 is the native encoding scheme for Unicode 2.0 and later, and Unicode's current limit of 1,112,064 unique code points stems from the number of unique values that UTF-16 can address with its basic (UCS-2) and surrogate pair systems combined.</p>
         <p>And so getting the UCS-2 operating systems and runtimes extended to handle the larger Unicode 2.0+ code page was taken care of, but what about systems that couldn't handle null bytes?</p>
         <h3>UTF-8</h3>
-        <p>Before I get into this, I have to say that UTF-8 is easily in the top five most ingenious things to ever happen in computer science. The engineer who created it, Ken Thompson, did so on the back of a napkin in a diner. He also deserves a Nobel Prize. I'll tell you why...</p>
-        <p>UTF-8 encodes all possible Unicode 2.0+ values using anywhere from one to four bytes. Now remember up above where I said that the Unicode code page extended the Basic ASCII code page? Well, UTF-8 encodes these values as single bytes. Not only that, but as single bytes that are identical to their Basic ASCII counterparts. This means that UTF-8 containing only Basic ASCII is itself Basic ASCII. And, any Basic ASCII text can be natively interpreted by UTF-8 as-is.</p>
+        <p>Before I get into this, I have to say that UTF-8 is easily one of the top five most ingenious inventions in computer science. The engineer who created it, Ken Thompson, did so on the back of a napkin in a diner. He also deserves a Nobel Prize. I'll tell you why...</p>
+        <p>UTF-8 encodes all possible code points, both BMP and supplemental, using anywhere from one to four bytes. Now remember up above where I said that the Unicode code page extended the Basic ASCII code page? Well, UTF-8 encodes these values as single bytes. Not only that, but as single bytes that are identical to their Basic ASCII counterparts. This means that UTF-8 containing only Basic ASCII is itself Basic ASCII. And, any Basic ASCII text can be natively interpreted by UTF-8 as-is.</p>
         <p>Anything outside of that Basic ASCII range requires two to four bytes. Here are the possible bit patterns that UTF-8 currently uses:</p>
         <ul>
             <li><code>0XXXXXXX</code></li>
@@ -61,7 +61,7 @@
             <li><code>11110XXX 10XXXXXX 10XXXXXX 10XXXXXX</code></li>
         </ul>
         <p>The <code>X</code> placeholders are where arbitrary bits for code point values are stored. Any UTF-8 sequence whose byte starts with a zero bit is Basic ASCII and is therefore encoded as such; legacy systems already display these properly. Meanwhile, code points outside of this range appear to legacy systems as a sequence of Extended ASCII characters; legacy systems may not display them properly, but they will not cause problems, either. Null bytes are never encountered unless specifically intended.</p>
-        <p>Note that the four byte sequences are used for encoding extended characters directly as opposed to using the surrogate mechanism used by UTF-16. It is against specification to encode a surrogate itself with UTF-8.</p>
+        <p>Note that the four byte sequences are used for encoding supplemental characters directly as opposed to using the surrogate mechanism from UTF-16. It is against specification to encode a surrogate itself with UTF-8.</p>
         <p>Another useful aspect of UTF-8 is its self-synchronization feature. This makes it possible to skip to the middle of a UTF-8 byte stream and determine what role in a character the current byte plays:</p>
         <ul>
             <li><code>0XXXXXXX</code>: A complete Basic ASCII character.</li>
@@ -82,7 +82,7 @@
                 <tr>
                     <th>Name</th>
                     <th>Bytes</th>
-                    <th>Extended Characters</th>
+                    <th>Supplemental Characters</th>
                     <th>ASCII Compatible</th>
                 </tr>
                 <tr>
@@ -159,7 +159,8 @@
             <li>Initial low surrogate.</li>
             <li>High surrogate not followed by low surrogate.</li>
         </ol>
-        <p>If the need to interoperate with UCS-2 ever presents itself, then UTF-16 becomes the only sensible option for doing so. In other cases, it may be desireable to use it internally for enclosed systems, as its representation is arguably cleaner.</p>
+        <p>If the need to interoperate with UCS-2 ever presents itself, UTF-16 becomes the only viable option for doing so. In other cases, it may be desireable to use it internally for enclosed systems, as its representation is arguably cleaner.</p>
+        <p>UTF-16 can self-synchronize so long as random access is done in two-byte increments.</p>
         <h3>UTF-32</h3>
         <p>This encoding is almost never encountered in the wild, although some language runtimes use it internally for string representation. The idea is that any Unicode character in a buffer can be decoded without having to first decode the ones that precede it. While this ability may sound useful at first, it has very limited utility in practice.</p>
         <p>It should be noted that the most significant byte is always going to be null, as Unicode itself only requires 21 bits of precision to adequately address all possible characters.</p>
@@ -171,8 +172,8 @@
         <p>Despite requiring lookup tables, it does have the ability to represent Basic ASCII characters with a single byte while still representing common Chinese characters with just two bytes, whereas UTF-8 requires three. It lacks UTF-8's self-synchronization capability, however, allowing a corrupted GBK sequence to corrupt the rest of the text buffer.</p>
         <p>It should be noted that Chinese websites overwhelmingly use UTF-8, including those of the Chinese Communist Party.</p>
         <h3>CESU-8</h3>
-        <p>This is a modification of UTF-8. The difference is that UTF-8 encodes extended characters directly whereas CESU-8 uses surrogate pairs. As such, four-byte sequences never occur in CESU-8.</p>
+        <p>This is a modification of UTF-8. The difference is that UTF-8 encodes supplemental characters directly whereas CESU-8 uses surrogate pairs. As such, four-byte sequences never occur in CESU-8.</p>
         <h3>WTF-8</h3>
-        <p>This is a combination of UTF-8 and CESU-8. Extended characters may be directly encoded as four-byte sequences, but they may also appear as a surrogate pair of twin three-byte sequences.</p>
+        <p>This is a combination of UTF-8 and CESU-8. Supplemental characters may be directly encoded as four-byte sequences, but they may also appear as a surrogate pair of twin three-byte sequences.</p>
     </body>
 </html>
