@@ -273,7 +273,10 @@
         </ol>
         <p>Any decoded Unicode value that doesn't follow these rules should be rejected.</p>
         <p>When randomly seeking, do not immediately resume decoding unless a directly encoded value is detected. Seek immediately past the next closing chunk instead, and resume decoding there.</p>
+        <h2>Byte Order Mark</h2>
+        <p>STF-7's byte order mark is: <code>0x3A 0x2F 0x3A 0x7E</code>.</p>
         <h2>Samples</h2>
+        <p>Below are some samples of how STF-7 encodes different characters.</p>
         <table>
             <tr>
                 <th>Text</th>
@@ -296,6 +299,30 @@
                 <td><code>Ethnically#|modified emoji$_ ":%'[":$:~</code></td>
             </tr>
             <tr>
+                <td><code>Καλά, ευχαριστώ</code></td>
+                <td><code>$*_$,&lt;$,`$+{#{ $,@$-@$-\$,&lt;$-&lt;$,^$-&gt;$-?$-}</code></td>
+            </tr>
+            <tr>
+                <td><code>иметь много общего</code></td>
+                <td><code>%$]%${%$@%%=%%{ %${%$|%$}%$&gt;%$} %$}%$&lt;%%^%$@%$&gt;%$}</code></td>
+            </tr>
+            <tr>
+                <td><code>אני מדבר קצת עברית</code></td>
+                <td><code>&.;&/;&.^ &.}&.&gt;&.&lt;&/] &/\&/[&/_ &/=&.&lt;&/]&.^&/_</code></td>
+            </tr>
+            <tr>
+                <td><code>حفلات تخرّج</code></td>
+                <td><code>'#|'%&lt;'%?'#\'#_ '#_'#}'$&lt;'&&lt;'#{</code></td>
+            </tr>
+            <tr>
+                <td><code>दोपहर के बाद नमस्कार</code></td>
+                <td><code>*#[*%`*#_*$^*$; *"@*%\ *#{*$}*#[ *#]*#}*$]*%|*"@*$}*$;</code></td>
+            </tr>
+            <tr>
+                <td><code>私の酒です。</code></td>
+                <td><code>(*-&lt;$!'}*"&=$!'\$!&^$!!=</code></td>
+            </tr>
+            <tr>
                 <td><code>안녕하세요!</code></td>
                 <td><code>-&%],"&@.&&]-"$]-'*?#&lt;</code></td>
             </tr>
@@ -304,11 +331,77 @@
                 <td><code>-)"{+-!; (:)}&(!`%/,_-()@,#-],#/?$_ ":":_":":]":*.&lt;</code></td>
             </tr>
             <tr>
-                <td><code>私の酒です。</code></td>
-                <td><code>(*-&lt;$!'}*"&=$!'\$!&^$!!=</code></td>
+                <td><code>事实胜于雄辩。</code></td>
+                <td><code>%/)`&,*})!.{%/)}*'-?):+^$!!=</code></td>
             </tr>
         </table>
-        <h2>Byte Order Mark</h2>
-        <p>STF-7's byte order mark is: <code>0x3A 0x2F 0x3A 0x7E</code></p>
+        <h2>Comparison</h2>
+        <p>The below table compares how many bytes STF-7 requires for different scalar values compared to other encodings. UTF-7 is not listed as it is rather freeform and arbitrary, resulting in security issues that have lead to its effective banishment from computing. STF-7 does not have these issues.</p>
+        <table class="medium">
+            <tr>
+                <th>Low</th>
+                <th>High</th>
+                <th>STF-7</th>
+                <th>UTF-8</th>
+                <th>UTF-16</th>
+                <th>UTF-32</th>
+            </tr>
+            <tr>
+                <td>U+00</td>
+                <td>U+7F</td>
+                <td>1|2</td>
+                <td>1</td>
+                <td>2</td>
+                <td>4</td>
+            </tr>
+            <tr>
+                <td>U+80</td>
+                <td>U+FF</td>
+                <td>2</td>
+                <td>2</td>
+                <td>2</td>
+                <td>4</td>
+            </tr>
+            <tr>
+                <td>U+100</td>
+                <td>U+7FF</td>
+                <td>3</td>
+                <td>2</td>
+                <td>2</td>
+                <td>4</td>
+            </tr>
+            <tr>
+                <td>U+800</td>
+                <td>U+FFF</td>
+                <td>3</td>
+                <td>3</td>
+                <td>2</td>
+                <td>4</td>
+            </tr>
+            <tr>
+                <td>U+1000</td>
+                <td>U+FFFF</td>
+                <td>4</td>
+                <td>3</td>
+                <td>2</td>
+                <td>4</td>
+            </tr>
+            <tr>
+                <td>U+10000</td>
+                <td>U+FFFFF</td>
+                <td>5</td>
+                <td>4</td>
+                <td>4</td>
+                <td>4</td>
+            </tr>
+            <tr>
+                <td>U+100000</td>
+                <td>U+10FFFF</td>
+                <td>6</td>
+                <td>4</td>
+                <td>4</td>
+                <td>4</td>
+            </tr>
+        </table>
     </body>
 </html>
