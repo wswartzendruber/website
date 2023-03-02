@@ -10,10 +10,6 @@ tr:nth-child(odd) {
     background-color: #bbb;
 }
 
-.container {
-    display: flex;
-}
-
 .full-width {
     width: 100%;
 }

@@ -1,0 +1,33 @@
+@media (min-width: 1431px) {
+
+    body {
+        margin: 25px auto;
+        max-width: 1430px;
+    }
+
+    table {
+        width: 90%;
+    }
+
+    table.narrow {
+        width: 33%;
+    }
+
+    table.medium {
+        width: 66%;
+    }
+
+    th, td {
+        padding: 8px;
+    }
+
+    .centered {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .container {
+        display: flex;
+        column-gap: 20px;
+    }
+}

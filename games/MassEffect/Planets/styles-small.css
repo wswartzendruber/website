@@ -1,0 +1,22 @@
+@media (max-width: 480px) {
+
+    body {
+        margin: 15px;
+    }
+
+    table {
+        width: 100%;
+    }
+
+    table.narrow {
+        width: 75%;
+    }
+
+    table.medium {
+        width: 88%;
+    }
+
+    th, td {
+        padding: 2px;
+    }
+}
