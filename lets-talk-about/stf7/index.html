@@ -28,6 +28,7 @@
             <li><code>U+10FFFF</code> encodes in six ASCII values.</li>
             <li>Single byte order mark (BOM).</li>
         </ul>
+        <p>Note that STF-7 still shares some of UTF-7's security concerns. See the dedicated section below for more information.</p>
         <h2>Encoding Steps</h2>
         <p>Some Unicode characters are encoded directly as single ASCII values. Others are encoded indirectly as multiple values, up to and including six.</p>
         <h3>Direct Encoding</h3>
@@ -275,6 +276,10 @@
         <p>When randomly seeking, do not immediately resume decoding unless a directly encoded value is detected. Seek immediately past the next closing chunk instead, and resume decoding there.</p>
         <h2>Byte Order Mark</h2>
         <p>STF-7's byte order mark is: <code>0x3A 0x2F 0x3A 0x7E</code>.</p>
+        <h2>Security Concerns</h2>
+        <p>As STF-7 does not directly encode the entire ASCII range, certain single ASCII values are represented using a pair of ASCII values in the encoded output.</p>
+        <p>Consider, for instance, the hypothetical case of filtering JavaScript out of HTML. As such, we are going to be filtering our text for any occurrences of <code>&lt;script&gt;</code> in our encoded text. We can typically do this reliably </p>
+        <p>Therefore, STF-7 should only be implemented as a part of a tightly-controlled system.
         <h2>Samples</h2>
         <p>Below are some samples of how STF-7 encodes different characters.</p>
         <table>
