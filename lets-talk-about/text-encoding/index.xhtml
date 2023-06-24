@@ -69,10 +69,10 @@
             <li><code>110XXXXX</code>: The first byte of a two-byte character.</li>
             <li><code>1110XXXX</code>: The first byte of a three-byte character.</li>
             <li><code>11110XXX</code>: The first byte of a four-byte character.</li>
-            <li><code>111110XX</code>: The first byte of a five-byte character (not valid UTF-8).</li>
-            <li><code>1111110X</code>: The first byte of a six-byte character (not valid UTF-8).</li>
-            <li><code>11111110</code>: Not valid UTF-8.</li>
-            <li><code>11111111</code>: Not valid UTF-8.</li>
+            <li><code>111110XX</code>: The first byte of a five-byte character (not valid Unicode).</li>
+            <li><code>1111110X</code>: The first byte of a six-byte character (not valid Unicode).</li>
+            <li><code>11111110</code>: Invalid byte.</li>
+            <li><code>11111111</code>: Invalid byte.</li>
         </ul>
         <p>Being ASCII-compatible in this manner allowed UTF-8 to be treated as the single drop-in replacement for all region-specific code pages. Effectively, UTF-8 bridged the gap between the prevalent world of ASCII and the new world of Unicode. Unicode's prominence today is owed entirely to this bridge.</p>
         <h2>Comparison of Encodings Today</h2>
@@ -146,7 +146,7 @@
         </ul>
         <p>With all this said, <strong>UTF-8 decoder implementations must take care to exercise proper security practices</strong>. Specifically, UTF-8 byte streams may be malformed in the following ways:</p>
         <ol>
-            <li>Invalid byte (any byte greater than <code>0b11110111</code> or <code>0xF7</code>).</li>
+            <li>Invalid byte (<code>0xFE</code> or <code>0xFF</code>).</li>
             <li>Incomplete sequence (expected a continuation byte but got something else).</li>
             <li>Unexpected continuation byte (such a byte appears as the beginning of a new sequence).</li>
             <li>Overlong value (decoded value is represented by more bytes than necessary).</li>
