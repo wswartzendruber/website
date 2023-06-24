@@ -78,64 +78,62 @@
         <p>Being ASCII-compatible in this manner allowed UTF-8 to be treated as the single drop-in replacement for all region-specific code pages. Effectively, UTF-8 bridged the gap between the prevalent world of ASCII and the new world of Unicode. Unicode's prominence today is owed entirely to this bridge.</p>
         <h2>Comparison of Encodings Today</h2>
         <p>Since the release of the Unicode 2.0 specification, other encodings have emerged to permit Unicode to be used in certain niche scenarios. Of everything listed below, only UTF-8, UTF-16, and UTF-32 are officially a part of that specification.</p>
-        <p>
-            <table class="medium">
-                <tr>
-                    <th>Name</th>
-                    <th>Bytes</th>
-                    <th>Supplemental Characters</th>
-                    <th>ASCII Compatible</th>
-                </tr>
-                <tr>
-                    <td>UTF-7</td>
-                    <td>1-8</td>
-                    <td>Surrogate Encoding</td>
-                    <td>Yes</td>
-                </tr>
-                <tr>
-                    <td>UTF-8</td>
-                    <td>1-4</td>
-                    <td>Direct Encoding</td>
-                    <td>Yes</td>
-                </tr>
-                <tr>
-                    <td>UTF-16</td>
-                    <td>2, 4</td>
-                    <td>Surrogate Encoding</td>
-                    <td>No</td>
-                </tr>
-                <tr>
-                    <td>UTF-32</td>
-                    <td>4</td>
-                    <td>Direct Encoding</td>
-                    <td>No</td>
-                </tr>
-                <tr>
-                    <td>UTF-EBCDIC</td>
-                    <td>1-5</td>
-                    <td>Direct Encoding</td>
-                    <td>No</td>
-                </tr>
-                <tr>
-                    <td>GB 18030</td>
-                    <td>1, 2, 4</td>
-                    <td>Direct Encoding</td>
-                    <td>Yes</td>
-                </tr>
-                <tr>
-                    <td>CESU-8</td>
-                    <td>1-6</td>
-                    <td>Surrogate Encoding</td>
-                    <td>Yes</td>
-                </tr>
-                <tr>
-                    <td>WTF-8</td>
-                    <td>1-6</td>
-                    <td>Both</td>
-                    <td>Yes</td>
-                </tr>
-            </table>
-        </p>
+        <table class="medium">
+            <tr>
+                <th>Name</th>
+                <th>Bytes</th>
+                <th>Supplemental Characters</th>
+                <th>ASCII Compatible</th>
+            </tr>
+            <tr>
+                <td>UTF-7</td>
+                <td>1-8</td>
+                <td>Surrogate Encoding</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>UTF-8</td>
+                <td>1-4</td>
+                <td>Direct Encoding</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>UTF-16</td>
+                <td>2, 4</td>
+                <td>Surrogate Encoding</td>
+                <td>No</td>
+            </tr>
+            <tr>
+                <td>UTF-32</td>
+                <td>4</td>
+                <td>Direct Encoding</td>
+                <td>No</td>
+            </tr>
+            <tr>
+                <td>UTF-EBCDIC</td>
+                <td>1-5</td>
+                <td>Direct Encoding</td>
+                <td>No</td>
+            </tr>
+            <tr>
+                <td>GB 18030</td>
+                <td>1, 2, 4</td>
+                <td>Direct Encoding</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>CESU-8</td>
+                <td>1-6</td>
+                <td>Surrogate Encoding</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>WTF-8</td>
+                <td>1-6</td>
+                <td>Both</td>
+                <td>Yes</td>
+            </tr>
+        </table>
         <h3>UTF-7</h3>
         <p>Currently defined by RFC 2152, this encoding is not really used anymore. The idea is to encode certain ASCII characters directly while using inline Base-64 for everything else. This inherently does not self-synchronize that well as seeking to the middle of an ASCII string could mean either directly encoded characters or inline Base-64.</p>
         <p>It originally found its place in allowing Unicode to pass through 7-bit MIME email. In recent years, mail systems have come to support the 8BITMIME extension, allowing UTF-8 to effortlessly pass through instead.</p>
