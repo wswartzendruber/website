@@ -76,7 +76,7 @@
         </ul>
         <p>Being ASCII-compatible in this manner allowed UTF-8 to be treated as the single drop-in replacement for all region-specific code pages. Effectively, UTF-8 bridged the gap between the prevalent world of ASCII and the new world of Unicode. Unicode's prominence today is owed entirely to this bridge.</p>
         <h2>Comparison of Encodings Today</h2>
-        <p>Since the release of the Unicode 2.0 specification, other encodings have emerged to permit Unicode to be used in certain niche scenarios. Of everything listed below, only UTF-8, UTF-16, and UTF-32 are officially a part of that specification.</p>
+        <p>Since the release of the Unicode 2.0 specification, real-world use of official encodings has become something other than what was intended. And new, unofficial encodings have emerged to permit Unicode to be used in certain niche scenarios. Of everything listed below, only UTF-8, UTF-16, and UTF-32 are officially a part of that specification.</p>
         <table class="medium">
             <tr>
                 <th>Name</th>
@@ -138,13 +138,8 @@
         <p>It originally found its place in allowing Unicode to pass through 7-bit MIME email. In recent years, mail systems have come to support the 8BITMIME extension, allowing UTF-8 to effortlessly pass through instead.</p>
         <p>In recent versions of .NET, The <code>System.Text.Encoding.UTF7Encoding</code> class, while present, results in an exception being thrown. This is due to security issues with the format itself. Browsers that are compliant with HTML5 are required to reject UTF-7 as an encoding.</p>
         <h3>UTF-8</h3>
-        <p>Originally, UTF-8 existed to allow Unicode to be supported on legacy systems that used region-specific code pages. Today, <strong>UTF-8 has completely taken over as the defacto standard encoding for all scenarios, both legacy and new</strong>. It's most prominent rise on the legacy side has been with the World Wide Web, where virtually all sites in existence declare it as their encoding regardless of their language. When it comes to new systems, UTF-8 is typically chosen as the only supported encoding, usually without consideration for anything else. Examples of this include:</p>
-        <ul>
-            <li>Google's RCS protocol defines UTF-8 whereas the previous SMS protocol defined UCS-2.</li>
-            <li>Matroska, a very popular multimedia container format, defines UTF-8.</li>
-            <li>Java 9 and later use UTF-8 for properties files.</li>
-        </ul>
-        <p>With all this said, <strong>UTF-8 decoder implementations must take care to exercise proper security practices</strong>. Specifically, UTF-8 byte streams may be malformed in the following ways:</p>
+        <p>Originally created as a compatibility mechanism for older operating systems and protocols that used region-specific code pages, UTF-8 has since become the defacto-standard encoding for Unicode. New protocols and formats now typically specify it as the only supported encoding. And older protocols and formats that support configurable code pages now typically see UTF-8 defined with all other encodings coming in a very distant place behind it.</p>
+        <p>But despite its near universal status, UTF-8 is not as simple to implement as some may suppose. <strong>Decoder implementations must take care to exercise proper security practices</strong>. Specifically, UTF-8 byte streams may be malformed in the following ways:</p>
         <ol>
             <li>Invalid byte (<code>0xFE</code> or <code>0xFF</code>).</li>
             <li>Incomplete sequence (expected a continuation byte but got something else).</li>
