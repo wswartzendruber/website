@@ -29,7 +29,7 @@
             <li><code>U+10FFFF</code> encodes in six ASCII values.</li>
             <li>Single byte order mark (BOM).</li>
         </ul>
-        <p>Note that STF-7 still shares some of UTF-7's security concerns. See the dedicated section below for more information.</p>
+        <p>Note that STF-7 still shares some of UTF-7’s security concerns. See the dedicated section below for more information.</p>
         <h2>Encoding Steps</h2>
         <p>Some Unicode characters are encoded directly as single ASCII values. Others are encoded indirectly as multiple values, up to and including six.</p>
         <h3>Direct Encoding</h3>
@@ -194,7 +194,7 @@
             </tr>
         </table>
         <h4>Closing Chunk</h4>
-        <p>For a Unicode value's final chunk, use the below table instead:</p>
+        <p>For a Unicode value’s final chunk, use the below table instead:</p>
         <table class="narrow">
             <tr>
                 <th>Chunk Value</th>
@@ -273,10 +273,10 @@
             <li>Any character that can be directly encoded should be directly encoded.</li>
             <li>Indirectly encoded characters should be encoded using as few bytes as possible.</li>
         </ol>
-        <p>Any decoded Unicode value that doesn't follow these rules should be rejected.</p>
+        <p>Any decoded Unicode value that doesn’t follow these rules should be rejected.</p>
         <p>When randomly seeking, do not immediately resume decoding unless a directly encoded value is detected. Seek immediately past the next closing chunk instead, and resume decoding there.</p>
         <h2>Byte Order Mark</h2>
-        <p>STF-7's byte order mark is: <code>0x3A 0x2F 0x3A 0x7E</code>.</p>
+        <p>STF-7’s byte order mark is: <code>0x3A 0x2F 0x3A 0x7E</code>.</p>
         <h2>Security Concerns</h2>
         <p>As STF-7 does not directly encode the entire ASCII range, certain single ASCII values are represented using pairs of ASCII values in the encoded output.</p>
         <p>Consider, for instance, the hypothetical case of filtering JavaScript out of HTML. As such, we are going to be filtering the encoded text for any occurrences of <code>&lt;script&gt;</code>. We can typically do this reliably under most code pages because the Basic ASCII range (<code>0x00</code>-<code>0x7F</code>) is encoded as-is. But with STF-7, <code>&lt;script&gt;</code> is encoded as <code>${script$}</code>, thereby allowing it to evade filtering. The encoded text can still be decoded later in the process and executed with every script block left in tact.</p>
