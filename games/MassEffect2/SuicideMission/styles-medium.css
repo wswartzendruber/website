@@ -1,0 +1,22 @@
+@media (min-width: 481px) and (max-width: 1280px) {
+
+    body {
+        margin: 20px;
+    }
+
+    table {
+        width: 90%;
+    }
+
+    table.narrow {
+        width: 50%;
+    }
+
+    table.medium {
+        width: 75%;
+    }
+
+    th, td {
+        padding: 4px;
+    }
+}
