@@ -1,22 +1,7 @@
-@media (max-width: 480px) {
+@media only screen and (max-width: 599px) {
 
-    body {
-        margin: 15px;
-    }
-
-    table {
-        width: 100%;
-    }
-
-    table.narrow {
-        width: 75%;
-    }
-
-    table.medium {
-        width: 88%;
-    }
-
-    th, td {
-        padding: 2px;
+    .grid {
+        gap: 10px;
+        grid-template-rows: 1fr 1fr 1fr;
     }
 }

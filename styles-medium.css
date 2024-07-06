@@ -1,22 +1,30 @@
-@media (min-width: 481px) and (max-width: 1280px) {
+@media only screen and (min-width: 600px) and (max-width: 1279px) {
 
     body {
         margin: 20px;
     }
 
-    table {
+    th, td {
+        padding: 8px;
+    }
+
+    .slim {
+        width: 60%;
+    }
+
+    .narrow {
+        width: 70%;
+    }
+
+    .medium {
+        width: 80%;
+    }
+
+    .wide {
         width: 90%;
     }
 
-    table.narrow {
-        width: 50%;
-    }
-
-    table.medium {
-        width: 75%;
-    }
-
-    th, td {
-        padding: 4px;
+    .full {
+        width: 100%;
     }
 }

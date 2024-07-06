@@ -1,28 +1,31 @@
-@media (min-width: 1281px) {
+@media only screen and (min-width: 1280px) {
 
     body {
-        margin: 25px auto;
-        max-width: 1280px;
-    }
-
-    table {
-        width: 90%;
-    }
-
-    table.narrow {
-        width: 33%;
-    }
-
-    table.medium {
-        width: 66%;
+        margin: 40px auto;
+        width: 1200px;
     }
 
     th, td {
         padding: 8px;
     }
 
-    .centered {
-        margin-left: auto;
-        margin-right: auto;
+    .slim {
+        width: 30%;
+    }
+
+    .narrow {
+        width: 40%;
+    }
+
+    .medium {
+        width: 60%;
+    }
+
+    .wide {
+        width: 80%;
+    }
+
+    .full {
+        width: 100%;
     }
 }

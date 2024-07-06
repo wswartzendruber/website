@@ -10,14 +10,14 @@ tr:nth-child(odd) {
     background-color: #bbb;
 }
 
-.container {
-    display: flex;
+table.centered {
+    display: table;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-.full-width {
-    width: 100%;
-}
-
-.manga-image {
-    border: 2px solid #000;
+.centered {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }

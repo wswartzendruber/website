@@ -1,33 +1,7 @@
-@media (min-width: 1431px) {
+@media only screen and (min-width: 1280px) {
 
-    body {
-        margin: 25px auto;
-        max-width: 1390px;
-    }
-
-    table {
-        width: 90%;
-    }
-
-    table.narrow {
-        width: 33%;
-    }
-
-    table.medium {
-        width: 66%;
-    }
-
-    th, td {
-        padding: 8px;
-    }
-
-    .centered {
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    .container {
-        display: flex;
-        column-gap: 20px;
+    .grid {
+        gap: 20px;
+        grid-template-columns: 1fr 1fr 1fr;
     }
 }

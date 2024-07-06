@@ -68,7 +68,7 @@
         <p>Directly encoded characters can be interpreted as-is by an ASCII system without STF-7 support.</p>
         <h3>Indirect Encoding</h3>
         <p>Any Unicode character not directly encoded is indirectly encoded. In this case, the scalar value is split into chunks of four bits.</p>
-        <table class="narrow">
+        <table class="slim">
             <tr>
                 <th>Low</th>
                 <th>High</th>
@@ -123,7 +123,7 @@
         <p>The number of ASCII values needed will reflect the number of four bit chunks the scalar value will be divided into. Padding is done by prepending any necessary zeroes to the most significant chunk. Each chunk will inherently have a value between <code>0x0</code> and <code>0xF</code>.</p>
         <h4>Initial Chunks</h4>
         <p>Start with the most significant chunk and work your way through each one except for the last one. Output a single ASCII value for each one in place of its four bit value according to the table below:</p>
-        <table class="narrow">
+        <table class="slim">
             <tr>
                 <th>Chunk Value</th>
                 <th>ASCII Value</th>
@@ -195,7 +195,7 @@
         </table>
         <h4>Closing Chunk</h4>
         <p>For a Unicode value’s final chunk, use the below table instead:</p>
-        <table class="narrow">
+        <table class="slim">
             <tr>
                 <th>Chunk Value</th>
                 <th>ASCII Value</th>
