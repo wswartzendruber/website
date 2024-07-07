@@ -1,5 +1,9 @@
 @media only screen and (min-width: 1280px) {
 
+    nav {
+        column-count: 3;
+    }
+
     .grid {
         gap: 20px;
         grid-template-columns: 1fr 1fr 1fr;
