@@ -1,6 +1,6 @@
 @media only screen and (min-width: 1280px) {
 
-    nav {
+    nav > ul {
         column-count: 4;
     }
 }
