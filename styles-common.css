@@ -10,6 +10,10 @@ p {
     text-align: justify;
 }
 
+dt {
+    font-weight: bold;
+}
+
 tr:nth-child(even) {
     background-color: #ddd;
 }

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width" />
+        <title>CF-8: The 8-bit Control Freak Format</title>
+        <link rel="stylesheet" href="../../styles-common.css" />
+        <link rel="stylesheet" href="../../styles-small.css" />
+        <link rel="stylesheet" href="../../styles-medium.css" />
+        <link rel="stylesheet" href="../../styles-large.css" />
+    </head>
+    <body>
+        <h1>CF-8: The 8-bit Control Freak Format</h1>
+        <h2>Premise</h2>
+        <p>The idea here is to allow all Unicode scalar values to be encoded such that both <strong>C0</strong> and <strong>C1</strong> control codes are perfectly preserved. It is somewhat compliant with ISO-2022.</p>
+        <h2>Approach</h2>
+        <p>CF-8 maps Unicode scalar values to byte values in the following fashion:</p>
+        <table class="medium">
+            <tr>
+                <th>Low</th>
+                <th>High</th>
+                <th>Byte 1</th>
+                <th>Byte 2</th>
+                <th>Byte 3</th>
+            </tr>
+            <tr>
+                <td>U+0000</td>
+                <td>U+009F</td>
+                <td><code>0x00</code> – <code>0x9F</code></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>U+00A0</td>
+                <td>U+03FF</td>
+                <td><code>0xE0</code> – <code>0xEF</code></td>
+                <td><code>0xA0</code> – <code>0xDF</code></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>U+0400</td>
+                <td>U+FFFF</td>
+                <td><code>0xF0</code> – <code>0xFF</code></td>
+                <td><code>0xA0</code> – <code>0xDF</code></td>
+                <td><code>0xA0</code> – <code>0xDF</code></td>
+            </tr>
+        </table>
+        <p>As only the Basic Multilingual Plane is supported, surrogate pairs must be used to encode supplementary characters.</p>
+        <h2>Encoding Example</h2>
+        <p>In the case of encoding the Chinese character 永 (eternity), this character has the scalar value of <code>U+6C38</code>. Referencing the table above, this value will need three bytes to encode. Accordingly, the value is mapped out into three separate fields that are 4-bit, 6-bit, and 6-bit, giving us a total of 16 bits:</p>
+        <p><code>0b0110 0b110000 0b111000</code></p>
+        <p>The three final byte values are calculated like so, with the hexadecimal values being constant in all three-byte cases:</p>
+        <p><code>byte_1 = 0xF0 + 0b0110</code><br /><code>byte_2 = 0xA0 + 0b110000</code><br /><code>byte_3 = 0xA0 + 0b111000</code></p>
+        <h2>Byte Order Mark</h2>
+        <p>CF-8’s byte order mark is: <code>0xFF 0xDB 0xDF</code>.</p>
+        <h2>Comparison</h2>
+        <p>The below table compares how many bytes CF-8 requires for different scalar values compared to other encodings.</p>
+        <table class="medium">
+            <tr>
+                <th>Low</th>
+                <th>High</th>
+                <th>CF-8</th>
+                <th>UTF-8</th>
+                <th>UTF-16</th>
+                <th>UTF-32</th>
+            </tr>
+            <tr>
+                <td>U+0000</td>
+                <td>U+007F</td>
+                <td>1</td>
+                <td>1</td>
+                <td>2</td>
+                <td>4</td>
+            </tr>
+            <tr>
+                <td>U+0080</td>
+                <td>U+009F</td>
+                <td>1</td>
+                <td>2</td>
+                <td>2</td>
+                <td>4</td>
+            </tr>
+            <tr>
+                <td>U+00A0</td>
+                <td>U+03FF</td>
+                <td>2</td>
+                <td>2</td>
+                <td>2</td>
+                <td>4</td>
+            </tr>
+            <tr>
+                <td>U+0400</td>
+                <td>U+07FF</td>
+                <td>3</td>
+                <td>2</td>
+                <td>2</td>
+                <td>4</td>
+            </tr>
+            <tr>
+                <td>U+0800</td>
+                <td>U+FFFF</td>
+                <td>3</td>
+                <td>3</td>
+                <td>2</td>
+                <td>4</td>
+            </tr>
+            <tr>
+                <td>U+010000</td>
+                <td>U+10FFFF</td>
+                <td>6</td>
+                <td>4</td>
+                <td>4</td>
+                <td>4</td>
+            </tr>
+        </table>
+        <h3>Versus UTF-8</h3>
+        <p>CF-8 has the following similarities to UTF-8:</p>
+        <ul>
+            <li>ASCII compatibility</li>
+            <li>Self-synchronization</li>
+        </ul>
+        <p>And it has the following differences:</p>
+        <ul>
+            <li>Surrogate pairs are needed to encode supplementary values.</li>
+            <li>The <code>0xFE</code> and <code>0xFF</code> bytes may appear in encoded streams.</li>
+        </ul>
+        <h3>Versus ISO-2022</h3>
+        <p>CF-8 follows ISO-2022 in the following ways:</p>
+        <ul>
+            <li><strong>C0</strong> and <strong>C1</strong> control codes are preserved.</li>
+            <li>Every multibyte character has the most significant bit set.</li>
+        </ul>
+        <p>And it deviates in the following ways:</p>
+        <ul>
+            <li>Unicode scalar values within the BMP can take anywhere from one to four bytes.</li>
+        </ul>
+        <p><a rel="license" href="http://creativecommons.org/publicdomain/zero/1.0/"><img src="../../cc0.svg" alt="Public Domain" style="border-width:0" /></a></p>
+    </body>
+</html>
