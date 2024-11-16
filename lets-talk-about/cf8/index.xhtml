@@ -47,7 +47,7 @@
         </table>
         <p>As only the Basic Multilingual Plane is supported, surrogate pairs must be used to encode supplementary characters.</p>
         <h2>Encoding Example</h2>
-        <p>In the case of encoding the Chinese character 永 (eternity), this character has the scalar value of <code>U+6C38</code>. Referencing the table above, this value will need three bytes to encode. Accordingly, the value is mapped out into three separate fields that are 4-bit, 6-bit, and 6-bit, giving us a total of 16 bits:</p>
+        <p>In the case of encoding the Chinese character 永 (eternity), this character has a scalar value of <code>U+6C38</code>. Referencing the table above, this value will need three bytes to encode. Accordingly, the value is mapped out into three separate fields that are 4-bit, 6-bit, and 6-bit, giving us a total of 16 bits:</p>
         <p><code>0b0110 0b110000 0b111000</code></p>
         <p>The three final byte values are calculated like so, with the hexadecimal values being constant in all three-byte cases:</p>
         <p><code>byte_1 = 0xF0 + 0b0110</code><br /><code>byte_2 = 0xA0 + 0b110000</code><br /><code>byte_3 = 0xA0 + 0b111000</code></p>
