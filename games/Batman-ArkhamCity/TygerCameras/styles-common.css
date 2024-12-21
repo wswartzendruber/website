@@ -1,0 +1,7 @@
+.grid {
+    display: grid;
+}
+
+.grid > div > a > img {
+    width: 100%;
+}
