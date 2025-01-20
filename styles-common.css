@@ -14,14 +14,6 @@ dt {
     font-weight: bold;
 }
 
-tr:nth-child(even) {
-    background-color: #ddd;
-}
-
-tr:nth-child(odd) {
-    background-color: #bbb;
-}
-
 table.centered {
     display: table;
     margin-left: auto;
@@ -32,4 +24,49 @@ table.centered {
     display: block;
     margin-left: auto;
     margin-right: auto;
+}
+
+/* Standard Theme (Default) */
+
+a:link {
+    color: #2355d5;
+}
+
+a:active {
+    color: #bc0201;
+}
+
+a:visited {
+    color: #9c219c;
+}
+
+body {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+tr:nth-child(even) {
+    background-color: #d0d0d0;
+}
+
+tr:nth-child(odd) {
+    background-color: #b7b7b7;
+}
+
+/* Dark Theme (Override) */
+
+@media (prefers-color-scheme: dark) {
+
+    body {
+        background-color: #000000;
+        color: #ffffff;
+    }
+
+    tr:nth-child(even) {
+        background-color: #2f2f2f;
+    }
+
+    tr:nth-child(odd) {
+        background-color: #484848;
+    }
 }
