@@ -29,44 +29,56 @@ table.centered {
 /* Standard Theme (Default) */
 
 a:link {
-    color: #2355d5;
+    color: #0c266a;
 }
 
 a:active {
-    color: #bc0201;
+    color: #5d0000;
 }
 
 a:visited {
-    color: #9c219c;
+    color: #4c0b4c;
 }
 
 body {
-    background-color: #ffffff;
+    background-color: #eeeeee;
     color: #000000;
 }
 
 tr:nth-child(even) {
-    background-color: #d0d0d0;
+    background-color: #cecece;
 }
 
 tr:nth-child(odd) {
-    background-color: #b7b7b7;
+    background-color: #aeaeae;
 }
 
 /* Dark Theme (Override) */
 
 @media (prefers-color-scheme: dark) {
 
+a:link {
+    color: #779deb;
+}
+
+a:active {
+    color: #e07f71;
+}
+
+a:visited {
+    color: #c882c5;
+}
+
     body {
         background-color: #000000;
-        color: #ffffff;
+        color: #eeeeee;
     }
 
     tr:nth-child(even) {
-        background-color: #2f2f2f;
+        background-color: #0b0b0b;
     }
 
     tr:nth-child(odd) {
-        background-color: #484848;
+        background-color: #222222;
     }
 }
