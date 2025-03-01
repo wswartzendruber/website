@@ -2,6 +2,10 @@ html {
     font-family: sans-serif;
 }
 
+h1 {
+    text-align: center;
+}
+
 h1,h2,h3,h4,h5,h6 {
     font-family: serif;
 }
@@ -20,6 +24,16 @@ p {
 
 dt {
     font-weight: bold;
+}
+
+footer {
+    margin-top: 2em;
+    text-align: center;
+}
+
+footer p {
+    font-size: small;
+    text-align: center;
 }
 
 table.centered {
