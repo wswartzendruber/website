@@ -11,10 +11,10 @@
     </head>
     <body>
         <h1>CF-8: The 8-bit Control Freak Format</h1>
-        <h2>Premise</h2>
-        <p>The idea here is to allow all Unicode scalar values to be encoded such that both <strong>C0</strong> and <strong>C1</strong> control codes are perfectly preserved. It is somewhat compliant with ISO-2022.</p>
-        <h2>Approach</h2>
-        <p>CF-8 maps Unicode scalar values to byte values in the following fashion:</p>
+        <h2>Overview</h2>
+        <p>The idea here is to allow all Unicode scalar values to be encoded such that both <strong>C0</strong> and <strong>C1</strong> control codes are transparent. It is therefore somewhat compliant with ISO-2022. Only code points within the Basic Multilingual Plane (BMP) can be encoded with CF-8. As such, the BMP’s surrogate pair system must be used to encode supplementary characters.</p>
+        <h2>Encoding Steps</h2>
+        <p>All BMP scalar values are encoded using anywhere from one to three bytes by splitting the value into that many bit fields and then adding the appropriate bias for each byte, if applicable. The <code>0bXXXXXXXX</code>, <code>0bXXXX</code>, and <code>0bXXXXXX</code> placeholders below represent 8-, 4-, and 16-bit values, respectively. Bias offsets (for two- and three-byte values) are fixed and shown as hexadecimal constants.</p>
         <table class="medium">
             <tr>
                 <th>Low</th>
@@ -26,31 +26,33 @@
             <tr>
                 <td>U+0000</td>
                 <td>U+009F</td>
-                <td><code>0x00</code> – <code>0x9F</code></td>
+                <td><code>0bXXXXXXXX</code></td>
                 <td></td>
                 <td></td>
             </tr>
             <tr>
                 <td>U+00A0</td>
                 <td>U+03FF</td>
-                <td><code>0xE0</code> – <code>0xEF</code></td>
-                <td><code>0xA0</code> – <code>0xDF</code></td>
+                <td><code>0xE0 + 0bXXXX</code></td>
+                <td><code>0xA0 + 0bXXXXXX</code></td>
                 <td></td>
             </tr>
             <tr>
                 <td>U+0400</td>
                 <td>U+FFFF</td>
-                <td><code>0xF0</code> – <code>0xFF</code></td>
-                <td><code>0xA0</code> – <code>0xDF</code></td>
-                <td><code>0xA0</code> – <code>0xDF</code></td>
+                <td><code>0xF0 + 0bXXXX</code></td>
+                <td><code>0xA0 + 0bXXXXXX</code></td>
+                <td><code>0xA0 + 0bXXXXXX</code></td>
             </tr>
         </table>
-        <p>As only the Basic Multilingual Plane is supported, surrogate pairs must be used to encode supplementary characters.</p>
         <h2>Encoding Example</h2>
         <p>In the case of encoding the Chinese character 永 (eternity), this character has a scalar value of <code>U+6C38</code>. Referencing the table above, this value will need three bytes to encode. Accordingly, the value is mapped out into three separate fields that are 4-bit, 6-bit, and 6-bit, giving us a total of 16 bits:</p>
         <p><code>0b0110 0b110000 0b111000</code></p>
         <p>The three final byte values are calculated like so, with the hexadecimal values being constant in all three-byte cases:</p>
         <p><code>byte_1 = 0xF0 + 0b0110</code><br /><code>byte_2 = 0xA0 + 0b110000</code><br /><code>byte_3 = 0xA0 + 0b111000</code></p>
+        <h2>Decoding</h2>
+        <p>The decoding steps are performed in reverse.</p>
+        <p>Decoders should reject any decoded overlong values. That is, each scalar value should be encoded using as few bytes as possible. Any decoded Unicode value that doesn’t follow this rule should be rejected.</p>
         <h2>Byte Order Mark</h2>
         <p>CF-8’s byte order mark is: <code>0xFF 0xDB 0xDF</code>.</p>
         <h2>Comparison</h2>
@@ -132,7 +134,7 @@
         </ul>
         <p>And it deviates in the following ways:</p>
         <ul>
-            <li>Unicode scalar values within the BMP can take anywhere from one to four bytes.</li>
+            <li>Unicode scalar values within the BMP can take anywhere from one to three bytes.</li>
         </ul>
         <footer>
             <p>
