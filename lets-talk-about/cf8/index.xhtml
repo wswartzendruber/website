@@ -14,7 +14,7 @@
         <h2>Overview</h2>
         <p>The idea here is to allow all Unicode scalar values to be encoded such that both <strong>C0</strong> and <strong>C1</strong> control codes are transparent. It is therefore somewhat compliant with ISO-2022. Only code points within the Basic Multilingual Plane (BMP) can be encoded with CF-8. As such, the BMP’s surrogate pair system must be used to encode supplementary characters.</p>
         <h2>Encoding Steps</h2>
-        <p>All BMP scalar values are encoded using anywhere from one to three bytes by splitting the value into that many bit fields and then adding the appropriate bias for each byte, if applicable. The <code>0bXXXXXXXX</code>, <code>0bXXXX</code>, and <code>0bXXXXXX</code> placeholders below represent 8-, 4-, and 16-bit values, respectively. Bias offsets (for two- and three-byte values) are fixed and shown as hexadecimal constants.</p>
+        <p>All BMP scalar values are encoded using anywhere from one to three bytes by splitting the value into that many bit fields and then adding the appropriate bias for each byte, if applicable. The <code>0bXXXXXXXX</code>, <code>0bXXXX</code>, and <code>0bXXXXXX</code> placeholders below represent 8-, 4-, and 6-bit values, respectively. Bias offsets (for two- and three-byte values) are fixed and shown as hexadecimal constants.</p>
         <table class="medium">
             <tr>
                 <th>Low</th>
