@@ -17,13 +17,13 @@
         <p>Back in 1962, teletype was quite common. These systems worked by sending binary signals over a physical wire. So a machine on one end could send bits (binary digits) to another machine on the other end. Well, if we group bits together, we basically have ourselves a base-2 numbering system. And because of this, we can represent arbitrary integer values. The more bits we assign to each value, the higher the maximum value we can represent.</p>
         <p>In order for meaningful messages to be conveyed, a standardized encoding system had to be devised. Such schemes are called code pages. Their purpose is to map linguistic symbols (or parts of symbols) to numerical values called code points. Each symbol has its own code point and each code point is unique to that symbol.</p>
         <p>For the purposes of teletype, a 7-bit system called ASCII was devised. It is shown below:</p>
-        <p><img class="centered wide" src="ascii.webp" alt="ASCII" /></p>
+        <p><img class="centered wide" src="ascii.jxl" alt="ASCII" /></p>
         <p>This is the system that the United States used for teletype and it became widely adopted as an industry standard.</p>
         <h2>A While Later: Computers</h2>
         <p>Sometime in the 1970s, personal computers started to become a thing. And like teletype systems, they also needed to be able to represent linguistic symbols using binary code. Except computers are a bit different from teletype: Whereas teletype doesn’t care about how many bits are assigned to a symbol, computers like to have everything be accessible in even powers two. ASCII was a logical choice for computers, but it was a 7-bit system. Seven is not a power of two, but eight is. Eight bits became commonly known as a byte and each ASCII value was represented with a single byte, except the first bit was typically set to zero (since it wasn’t needed).</p>
         <p>Well, this gives us a whole extra bit to work with. Meaning, we have ASCII from 1962 with bit patterns of <code>0XXXXXXX</code> (Regular ASCII), but we can also define a whole different code page with bit patterns of <code>1XXXXXXX</code> (Extended ASCII).</p>
         <p>The most common Extended ASCII code page that I remember is called CP437:</p>
-        <p><img class="centered wide" src="cp437.webp" alt="CP437" /></p>
+        <p><img class="centered wide" src="cp437.jxl" alt="CP437" /></p>
         <p>And so Regular ASCII code point values range from 0-127 while Extended ASCII ranges from 128-255.</p>
         <h2>Different Languages: Code Page Confusion</h2>
         <p>The United States may have adopted CP437 as its Extended ASCII code page, but other regions of the world had little use for it. What they did have use for, however, was repurposing the Extended ASCII range to contain their own localized linguistic symbols. Well, here’s the problem. All files really contain is bytes of data, and computers only know to display that data according to the code page they’re configured for. Computers back then didn’t know or care about which code page a file was really encoded in, they would simply display it as they knew how. Imagine opening a Russian file on a machine configured for Israel’s code page. You’ll see Hebrew, but it will be absolute gibberish. And for that matter, if you find a text file, how do you even know what code page it’s encoded with?</p>
@@ -174,7 +174,7 @@
                 Copyright © 2025 William Swartzendruber<br />
                 This work is licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank">CC BY-SA 4.0</a>.
             </p>
-            <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank"><img src="../../cc-by-sa.webp" alt="CC BY-SA 4.0" /></a>
+            <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank"><img src="../../cc-by-sa.jxl" alt="CC BY-SA 4.0" /></a>
         </footer>
     </body>
 </html>
